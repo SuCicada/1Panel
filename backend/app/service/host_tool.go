@@ -17,6 +17,7 @@ import (
 	"os/exec"
 	"os/user"
 	"path"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -372,6 +373,27 @@ func (h *HostToolService) OperateSupervisorProcess(req request.SupervisorProcess
 
 	return nil
 }
+func (h *HostToolService) GetSupervisorConfigFiles() ([]string, error) {
+	cfg, err := ini.Load("/etc/supervisord.conf")
+	if err != nil {
+		return nil, err
+	}
+	section, err := cfg.GetSection("include")
+	if err != nil {
+		return nil, err
+	}
+	filesObj, err := section.GetKey("files")
+	if err != nil {
+		return nil, err
+	}
+	var ff = strings.Split(filesObj.String(), " ")
+	var dd = []string{
+		path.Dir(ff[0]),
+		path.Dir(ff[1]),
+	}
+	slices.Sort(dd)
+	return slices.Compact(dd), nil
+}
 
 func (h *HostToolService) GetSupervisorProcessConfig() ([]response.SupervisorProcessConfig, error) {
 	var (
@@ -379,10 +401,18 @@ func (h *HostToolService) GetSupervisorProcessConfig() ([]response.SupervisorPro
 	)
 	configDir := path.Join(global.CONF.System.BaseDir, "1panel", "tools", "supervisord", "supervisor.d")
 	fileList, _ := NewIFileService().GetFileList(request.FileOption{FileOption: files.FileOption{Path: configDir, Expand: true, Page: 1, PageSize: 100}})
-	if len(fileList.Items) == 0 {
+	var configFiles []*files.FileInfo
+	configFiles = append(configFiles, fileList.Items...)
+	//var otherConfigFiles, _ = h.GetSupervisorConfigFiles()
+	//for _, otherConfigFile := range otherConfigFiles {
+	//	fileList1, _ := NewIFileService().GetFileList(request.FileOption{FileOption: files.FileOption{Path: otherConfigFile, Expand: true, Page: 1, PageSize: 100}})
+	//	configFiles = append(configFiles, fileList1.Items...)
+	//}
+
+	if len(configFiles) == 0 {
 		return result, nil
 	}
-	for _, configFile := range fileList.Items {
+	for _, configFile := range configFiles {
 		f, err := ini.Load(configFile.Path)
 		if err != nil {
 			global.LOG.Errorf("get %s file err %s", configFile.Name, err.Error())
@@ -493,14 +523,18 @@ func operateSupervisorCtl(operate, name, group string) error {
 		if err != nil {
 			return err
 		}
-		numprocsNum := ""
+		numprocsNum := "1"
 		if numprocs, _ := section.GetKey("numprocs"); numprocs != nil {
 			numprocsNum = numprocs.Value()
 		}
 		if numprocsNum == "" {
 			return buserr.New("ErrConfigParse")
 		}
-		processNames = append(processNames, getProcessName(name, numprocsNum)...)
+		if processName, _ := section.GetKey("process_name"); processName != nil {
+			processNames = append(processNames, getProcessName(name, numprocsNum)...)
+		} else {
+			processNames = append(processNames, name)
+		}
 	}
 	if group != "" {
 		processNames = append(processNames, group)
@@ -509,6 +543,7 @@ func operateSupervisorCtl(operate, name, group string) error {
 	output, err := exec.Command("supervisorctl", processNames...).Output()
 	if err != nil {
 		if output != nil {
+			global.LOG.Errorf("operate %s %s err %s", operate, name, string(output))
 			return errors.New(string(output))
 		}
 		return err
@@ -542,19 +577,23 @@ func getProcessStatus(config *response.SupervisorProcessConfig) error {
 	var (
 		processNames = []string{"status"}
 	)
-	processNames = append(processNames, getProcessName(config.Name, config.Numprocs)...)
+	if config.Numprocs != "" {
+		processNames = append(processNames, getProcessName(config.Name, config.Numprocs)...)
+	} else {
+		processNames = append(processNames, config.Name)
+	}
 	output, _ := exec.Command("supervisorctl", processNames...).Output()
 	lines := strings.Split(string(output), "\n")
 	for _, line := range lines {
 		fields := strings.Fields(line)
-		if len(fields) >= 5 {
+		if len(fields) >= 4 {
 			status := response.ProcessStatus{
 				Name:   fields[0],
 				Status: fields[1],
 			}
 			if fields[1] == "RUNNING" {
 				status.PID = strings.TrimSuffix(fields[3], ",")
-				status.Uptime = fields[5]
+				status.Uptime = strings.Join(fields[5:], " ")
 			} else {
 				status.Msg = strings.Join(fields[2:], " ")
 			}

@@ -107,7 +107,9 @@ func Init() {
 }
 
 func loadParams(param string) string {
-	stdout, err := cmd.Execf("grep '^%s=' /usr/local/bin/1pctl | cut -d'=' -f2", param)
+	var cmdStr = fmt.Sprintf("grep '^%s=' /usr/local/bin/1pctl | cut -d'=' -f2", param)
+	fmt.Println(cmdStr)
+	stdout, err := cmd.Execf(cmdStr)
 	if err != nil {
 		panic(err)
 	}
