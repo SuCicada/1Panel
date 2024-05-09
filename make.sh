@@ -1,0 +1,1 @@
+sumake -f my.mk $@
