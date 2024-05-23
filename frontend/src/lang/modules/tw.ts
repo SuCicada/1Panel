@@ -797,6 +797,7 @@ const message = {
         snapshot: '系統快照',
         allOptionHelper: '當前計劃任務為備份所有【{0}】，暫不支持直接下載，可在【{0}】備份列表中查看',
         exclusionRules: '排除規則',
+        exclusionRulesHelper: '排除規則將對此次備份的所有壓縮操作生效',
         default_download_path: '默認下載地址',
         saveLocal: '同時保留本地備份（和雲存儲保留份數一致）',
         url: 'URL 地址',
@@ -1099,6 +1100,10 @@ const message = {
         clashDitNotSupport: '檔名禁止包含 .1panel_clash',
         clashDleteAlert: '回收站資料夾不能刪除',
         clashOpenAlert: '回收站目錄請點選【回收站】按鈕開啟',
+        right: '前進',
+        back: '後退',
+        top: '返回上一層',
+        refresh: '重新整理',
     },
     ssh: {
         autoStart: '開機自啟',
@@ -1191,6 +1196,8 @@ const message = {
         noSpace: '輸入信息不能包括空格符號',
         duplicatePassword: '新密碼不能與原始密碼一致，請重新輸入！',
         diskClean: '缓存清理',
+        developerMode: '預覽體驗計劃',
+        developerModeHelper: '獲取 1Panel 的預覽版本，以分享有關新功能和更新的反饋',
 
         thirdParty: '第三方賬號',
         createBackupAccount: '添加 {0}',
@@ -1260,6 +1267,7 @@ const message = {
         accountKey: '賬戶密鑰',
         address: '地址',
         path: '路徑',
+        backupJump: '未在當前備份列表中的備份檔案，請嘗試從檔案目錄中下載後導入備份。',
 
         snapshot: '快照',
         status: '快照狀態',
@@ -1296,8 +1304,6 @@ const message = {
         versionHelper: '1Panel 版本號命名規則為： [大版本].[功能版本].[Bug 修復版本]，例：',
         versionHelper1: 'v1.0.1 是 v1.0.0 之後的 Bug 修復版本',
         versionHelper2: 'v1.1.0 是 v1.0.0 之後的功能版本',
-        newVersion: '(Bug 修復版本)',
-        latestVersion: '(功能版本)',
         upgradeCheck: '檢查更新',
         upgradeNotes: '更新內容',
         upgradeNow: '立即更新',
@@ -1575,6 +1581,7 @@ const message = {
         hostModeHelper: '目前應用網路模式為 host 模式，如需放開端口，請在防火牆頁面手動放開',
         showLocal: '顯示本機應用程式',
         reload: '重載',
+        upgradeWarn: '升級應用程式會取代 docker-compose.yml 文件，如有更改，請升級之後替換',
     },
     website: {
         website: '網站',
@@ -1814,6 +1821,7 @@ const message = {
         tencentCloud: '騰訊雲',
         containWarn: '其他域名中包含主域名，请重新輸入',
         rewriteHelper2: '從應用程式商店安裝的 WordPress 等應用，預設已經配置好偽靜態，重複配置可能會報錯',
+        websiteBackupWarn: '僅支援導入本機備份，導入其他機器備份可能會恢復失敗',
     },
     php: {
         short_open_tag: '短標簽支持',
@@ -1918,6 +1926,11 @@ const message = {
         cfHelper: '請勿使用 Global API Key',
         deprecated: '即將廢棄',
         deprecatedHelper: '已經停止維護，可能會在以後的某個版本廢棄，請使用騰訊雲方式解析',
+        disableCNAME: '停用 CNAME',
+        disableCNAMEHelper: '有 CNAME 配置的域名，如果申請失敗，可以勾選此處',
+        nameserver: 'DNS 伺服器',
+        nameserverHelper: '使用自訂的 DNS 伺服器來校驗網域名稱',
+        edit: '編輯證書',
     },
     firewall: {
         create: '創建規則',

@@ -8,6 +8,7 @@ export namespace Setting {
         systemIP: string;
         systemVersion: string;
         dockerSockPath: string;
+        developerMode: string;
 
         sessionTimeout: number;
         localTime: string;
@@ -151,6 +152,7 @@ export namespace Setting {
         productPro: string;
         trial: boolean;
         status: string;
+        message: string;
     }
     export interface LicenseStatus {
         productPro: string;

@@ -10,6 +10,19 @@
                 />
                 <DrawerHeader v-else :header="$t('commons.button.backup')" :resource="name" :back="handleClose" />
             </template>
+
+            <div class="mb-5" v-if="type === 'app'">
+                <el-alert :closable="false" type="warning">
+                    <div class="mt-2 text-xs">
+                        <span>{{ $t('setting.backupJump') }}</span>
+                        <span class="jump" @click="goFile()">
+                            <el-icon class="ml-2"><Position /></el-icon>
+                            {{ $t('firewall.quickJump') }}
+                        </span>
+                    </div>
+                </el-alert>
+            </div>
+
             <ComplexTable
                 v-loading="loading"
                 :pagination-config="paginationConfig"
@@ -18,7 +31,7 @@
                 :data="data"
             >
                 <template #toolbar>
-                    <el-button type="primary" @click="onBackup()">
+                    <el-button type="primary" :disabled="status && status != 'Running'" @click="onBackup()">
                         {{ $t('commons.button.backup') }}
                     </el-button>
                     <el-button type="primary" plain :disabled="selects.length === 0" @click="onBatchDelete(null)">
@@ -60,12 +73,13 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import { computeSize, dateFormat, downloadFile } from '@/utils/util';
-import { handleBackup, handleRecover } from '@/api/modules/setting';
+import { getBackupList, handleBackup, handleRecover } from '@/api/modules/setting';
 import i18n from '@/lang';
 import DrawerHeader from '@/components/drawer-header/index.vue';
 import { deleteBackupRecord, downloadBackupRecord, searchBackupRecords } from '@/api/modules/setting';
 import { Backup } from '@/api/interface/backup';
 import { MsgSuccess } from '@/utils/message';
+import router from '@/routers';
 
 const selects = ref<any>([]);
 const loading = ref();
@@ -83,21 +97,48 @@ const backupVisible = ref(false);
 const type = ref();
 const name = ref();
 const detailName = ref();
+const backupPath = ref();
+const status = ref();
 
 interface DialogProps {
     type: string;
     name: string;
     detailName: string;
+    status: string;
 }
 const acceptParams = (params: DialogProps): void => {
     type.value = params.type;
+    if (type.value === 'app') {
+        loadBackupDir();
+    }
     name.value = params.name;
     detailName.value = params.detailName;
     backupVisible.value = true;
+    status.value = params.status;
     search();
 };
 const handleClose = () => {
     backupVisible.value = false;
+};
+
+const loadBackupDir = () => {
+    getBackupList().then((res) => {
+        let backupList = res.data || [];
+        for (const bac of backupList) {
+            if (bac.type !== 'LOCAL') {
+                continue;
+            }
+            if (bac.id !== 0) {
+                bac.varsJson = JSON.parse(bac.vars);
+            }
+            backupPath.value = bac.varsJson['dir'];
+            break;
+        }
+    });
+};
+
+const goFile = async () => {
+    router.push({ name: 'File', query: { path: `${backupPath.value}/app/${name.value}/${detailName.value}` } });
 };
 
 const search = async () => {
@@ -241,3 +282,13 @@ defineExpose({
     acceptParams,
 });
 </script>
+
+<style lang="scss" scoped>
+.jump {
+    color: $primary-color;
+    cursor: pointer;
+    &:hover {
+        color: #74a4f3;
+    }
+}
+</style>

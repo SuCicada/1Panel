@@ -318,7 +318,7 @@ func (b *BaseApi) UploadFiles(c *gin.Context) {
 	}
 	dir := path.Dir(paths[0])
 
-	info, err := os.Stat(dir)
+	_, err = os.Stat(dir)
 	if err != nil && os.IsNotExist(err) {
 		mode, err := files.GetParentMode(dir)
 		if err != nil {
@@ -330,7 +330,7 @@ func (b *BaseApi) UploadFiles(c *gin.Context) {
 			return
 		}
 	}
-	info, err = os.Stat(dir)
+	info, err := os.Stat(dir)
 	if err != nil {
 		helper.ErrorWithDetail(c, constant.CodeErrInternalServer, constant.ErrTypeInternalServer, err)
 		return
@@ -486,6 +486,7 @@ func (b *BaseApi) Download(c *gin.Context) {
 	if err != nil {
 		helper.ErrorWithDetail(c, constant.CodeErrInternalServer, constant.ErrTypeInternalServer, err)
 	}
+	defer file.Close()
 	info, _ := file.Stat()
 	c.Header("Content-Length", strconv.FormatInt(info.Size(), 10))
 	c.Header("Content-Disposition", "attachment; filename*=utf-8''"+url.PathEscape(info.Name()))
@@ -643,6 +644,7 @@ func (b *BaseApi) UploadChunkFiles(c *gin.Context) {
 		helper.ErrorWithDetail(c, constant.CodeErrBadRequest, constant.ErrTypeInvalidParams, err)
 		return
 	}
+	defer uploadFile.Close()
 	chunkIndex, err := strconv.Atoi(c.PostForm("chunkIndex"))
 	if err != nil {
 		helper.ErrorWithDetail(c, constant.CodeErrBadRequest, constant.ErrTypeInvalidParams, err)

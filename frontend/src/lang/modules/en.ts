@@ -837,6 +837,7 @@ const message = {
         allOptionHelper:
             'The current task plan is to back up all [{0}]. Direct download is not supported at the moment. You can check the backup list of [{0}] menu.',
         exclusionRules: 'Exclusive rule',
+        exclusionRulesHelper: 'The exclusion rules will apply to all compression operations of this backup.',
         default_download_path: 'Default Download Link',
         saveLocal: 'Retain local backups (the same as the number of cloud storage copies)',
         url: 'URL Address',
@@ -1155,6 +1156,10 @@ const message = {
         clashDitNotSupport: 'File names are prohibited from containing .1panel_clash',
         clashDeleteAlert: 'The Recycle Bin folder cannot be deleted',
         clashOpenAlert: 'Please click the [Recycle Bin] button to open the recycle bin directory',
+        right: 'Forward',
+        back: 'Back',
+        top: 'Go Back',
+        refresh: 'Refresh',
     },
     ssh: {
         autoStart: 'Auto Start',
@@ -1268,6 +1273,8 @@ const message = {
         noSpace: 'Input information cannot include space characters',
         duplicatePassword: 'The new password cannot be the same as the original password, please re-enter!',
         diskClean: 'Cache Clean',
+        developerMode: 'Preview Experience Program',
+        developerModeHelper: 'Get a preview version of 1Panel to provide feedback on new features and updates',
 
         thirdParty: 'Third-party account',
         createBackupAccount: 'Add {0}',
@@ -1430,6 +1437,8 @@ const message = {
         rootCrtDownload: 'Root certificate download',
         primaryKey: 'Primary key',
         certificate: 'Certificate',
+        backupJump:
+            'Backup files not in the current backup list, please try downloading from the file directory and importing for backup.',
 
         snapshot: 'Snapshot',
         status: 'Snapshot status',
@@ -1468,8 +1477,6 @@ const message = {
             'Name rules: [major version].[functional version].[Bug fix version], as shown in the following example:',
         versionHelper1: 'v1.0.1 is a Bug fix after v1.0.0',
         versionHelper2: 'v1.1.0 is a feature release after v1.0.0',
-        newVersion: '(Bug fix version)',
-        latestVersion: '(Functional version)',
         upgradeCheck: 'Check for updates',
         upgradeNotes: 'Release note',
         upgradeNow: 'Upgrade now',
@@ -1481,7 +1488,7 @@ const message = {
         issue: 'Feedback',
         doc: 'Official document',
         star: 'Star',
-        description: 'Linux server operation and maintenance management panel',
+        description: 'Linux Server Panel',
         forum: 'Forum Help',
         doc2: 'User Manual',
         currentVersion: 'Version',
@@ -1688,6 +1695,8 @@ const message = {
             'The current application network mode is host mode. If you need to open the port, please open it manually on the firewall page.',
         showLocal: 'Show Local Application',
         reload: 'Reload',
+        upgradeWarn:
+            'Upgrading the application will replace the docker-compose.yml file. If there is any change, please replace it after upgrading',
     },
     website: {
         website: 'Website',
@@ -1939,6 +1948,8 @@ const message = {
         containWarn: 'The domain name contains the main domain, please re-enter',
         rewriteHelper2:
             'Applications such as WordPress installed from the app store have pseudo-static configuration by default. Repeated configuration may result in errors',
+        websiteBackupWarn:
+            'Only supports importing local backups, importing backups from other machines may cause recovery failure',
     },
     php: {
         short_open_tag: 'Short tag support',
@@ -2048,6 +2059,11 @@ const message = {
         deprecated: 'will be deprecated',
         deprecatedHelper:
             'Maintenance has been stopped and may be abandoned in a future version. Please use Tencent Cloud method for analysis',
+        disableCNAME: 'Disable CNAME',
+        disableCNAMEHelper: 'Domain name with CNAME configuration, if the application fails, you can check here',
+        nameserver: 'DNS server',
+        nameserverHelper: 'Use a custom DNS server to verify domain names',
+        edit: 'Edit certificate',
     },
     firewall: {
         create: 'Create rule',

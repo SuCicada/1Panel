@@ -4,6 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
+	"path"
+	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
+	"time"
+
 	"github.com/1Panel-dev/1Panel/backend/app/dto"
 	"github.com/1Panel-dev/1Panel/backend/app/dto/request"
 	"github.com/1Panel-dev/1Panel/backend/app/dto/response"
@@ -19,13 +27,6 @@ import (
 	"github.com/1Panel-dev/1Panel/backend/utils/files"
 	"github.com/pkg/errors"
 	"github.com/subosito/gotenv"
-	"os"
-	"path"
-	"path/filepath"
-	"regexp"
-	"strconv"
-	"strings"
-	"time"
 )
 
 type RuntimeService struct {
@@ -43,6 +44,7 @@ type IRuntimeService interface {
 	OperateNodeModules(req request.NodeModuleOperateReq) error
 	SyncForRestart() error
 	SyncRuntimeStatus() error
+	DeleteCheck(installID uint) ([]dto.AppResource, error)
 }
 
 func NewRuntimeService() IRuntimeService {
@@ -176,6 +178,18 @@ func (r *RuntimeService) Page(req request.RuntimeSearch) (int64, []response.Runt
 	return total, res, nil
 }
 
+func (r *RuntimeService) DeleteCheck(runTimeId uint) ([]dto.AppResource, error) {
+	var res []dto.AppResource
+	websites, _ := websiteRepo.GetBy(websiteRepo.WithRuntimeID(runTimeId))
+	for _, website := range websites {
+		res = append(res, dto.AppResource{
+			Type: "website",
+			Name: website.PrimaryDomain,
+		})
+	}
+	return res, nil
+}
+
 func (r *RuntimeService) Delete(runtimeDelete request.RuntimeDelete) error {
 	runtime, err := runtimeRepo.GetFirst(commonRepo.WithByID(runtimeDelete.ID))
 	if err != nil {
@@ -193,6 +207,7 @@ func (r *RuntimeService) Delete(runtimeDelete request.RuntimeDelete) error {
 			if err != nil {
 				return err
 			}
+			defer client.Close()
 			imageID, err := client.GetImageIDByName(runtime.Image)
 			if err != nil {
 				return err
@@ -420,6 +435,7 @@ func (r *RuntimeService) Update(req request.RuntimeUpdate) error {
 		if err != nil {
 			return err
 		}
+		defer client.Close()
 		imageID, err := client.GetImageIDByName(oldImage)
 		if err != nil {
 			return err

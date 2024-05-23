@@ -125,12 +125,16 @@
                                                     :width="400"
                                                     trigger="hover"
                                                     :content="installed.message"
+                                                    :popper-options="options"
                                                 >
                                                     <template #reference>
                                                         <el-button link type="danger">
                                                             <el-icon><Warning /></el-icon>
                                                         </el-button>
                                                     </template>
+                                                    <div class="app-error">
+                                                        {{ installed.message }}
+                                                    </div>
                                                 </el-popover>
                                             </span>
                                             <span class="ml-1">
@@ -164,10 +168,6 @@
                                                 plain
                                                 round
                                                 size="small"
-                                                :disabled="
-                                                    installed.status !== 'Running' ||
-                                                    installed.app.status === 'TakeDown'
-                                                "
                                                 @click="openUploads(installed.app.key, installed.name)"
                                                 v-if="mode === 'installed'"
                                             >
@@ -178,11 +178,9 @@
                                                 plain
                                                 round
                                                 size="small"
-                                                :disabled="
-                                                    installed.status !== 'Running' ||
-                                                    installed.app.status === 'TakeDown'
+                                                @click="
+                                                    openBackups(installed.app.key, installed.name, installed.status)
                                                 "
-                                                @click="openBackups(installed.app.key, installed.name)"
                                                 v-if="mode === 'installed'"
                                             >
                                                 {{ $t('commons.button.backup') }}
@@ -362,6 +360,17 @@ const mode = ref('installed');
 const moreTag = ref('');
 const language = getLanguage();
 const appDetail = ref();
+const options = {
+    modifiers: [
+        {
+            name: 'flip',
+            options: {
+                padding: 5,
+                fallbackPlacements: ['bottom-start', 'top-start', 'right', 'left'],
+            },
+        },
+    ],
+};
 
 const sync = () => {
     ElMessageBox.confirm(i18n.global.t('app.syncAllAppHelper'), i18n.global.t('app.sync'), {
@@ -560,11 +569,12 @@ const buttons = [
     },
 ];
 
-const openBackups = (key: string, name: string) => {
+const openBackups = (key: string, name: string, status: string) => {
     let params = {
         type: 'app',
         name: key,
         detailName: name,
+        status: status,
     };
     backupRef.value.acceptParams(params);
 };
@@ -620,5 +630,10 @@ onUnmounted(() => {
         max-width: 100%;
         flex: 0 0 100%;
     }
+}
+
+.app-error {
+    max-height: 500px;
+    overflow-y: auto;
 }
 </style>

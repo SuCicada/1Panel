@@ -180,6 +180,9 @@ func (w WebsiteService) GetWebsites() ([]response.WebsiteDTO, error) {
 
 func (w WebsiteService) CreateWebsite(create request.WebsiteCreate) (err error) {
 	alias := create.Alias
+	if alias == "default" {
+		return buserr.New("ErrDefaultAlias")
+	}
 	if common.ContainsChinese(alias) {
 		alias, err = common.PunycodeEncode(alias)
 		if err != nil {
@@ -293,7 +296,7 @@ func (w WebsiteService) CreateWebsite(create request.WebsiteCreate) (err error) 
 					install *model.AppInstall
 				)
 				reg, _ := regexp.Compile(`[^a-z0-9_-]+`)
-				req.Name = reg.ReplaceAllString(strings.ToLower(create.PrimaryDomain), "")
+				req.Name = reg.ReplaceAllString(strings.ToLower(alias), "")
 				req.AppDetailId = create.AppInstall.AppDetailId
 				req.Params = create.AppInstall.Params
 				req.Params["IMAGE_NAME"] = runtime.Image

@@ -1,7 +1,7 @@
 <template>
     <el-drawer :close-on-click-modal="false" v-model="open" size="50%">
         <template #header>
-            <DrawerHeader :header="$t('ssl.create')" :back="handleClose" />
+            <DrawerHeader :header="$t('ssl.' + operate)" :back="handleClose" />
         </template>
         <el-row v-loading="loading">
             <el-col :span="22" :offset="1">
@@ -40,7 +40,7 @@
                                 :value="acme.id"
                             >
                                 <el-row>
-                                    <el-col :span="6">
+                                    <el-col :span="11">
                                         <span>{{ acme.email }}</span>
                                     </el-col>
                                     <el-col :span="11">
@@ -119,6 +119,30 @@
                             {{ $t('ssl.pushDirHelper') }}
                         </span>
                     </el-form-item>
+                    <el-form-item :label="''" prop="disableCNAME">
+                        <el-checkbox v-model="ssl.disableCNAME" :label="$t('ssl.disableCNAME')" />
+                        <span class="input-help">
+                            {{ $t('ssl.disableCNAMEHelper') }}
+                        </span>
+                    </el-form-item>
+                    <el-form-item :label="''" prop="skipDNS">
+                        <el-checkbox v-model="ssl.skipDNS" :label="$t('ssl.skipDNSCheck')" />
+                        <span class="input-help">
+                            {{ $t('ssl.skipDNSCheckHelper') }}
+                        </span>
+                    </el-form-item>
+                    <el-form-item :label="$t('ssl.nameserver') + '1'" prop="nameserver1">
+                        <el-input v-model.trim="ssl.nameserver1"></el-input>
+                        <span class="input-help">
+                            {{ $t('ssl.nameserverHelper') }}
+                        </span>
+                    </el-form-item>
+                    <el-form-item :label="$t('ssl.nameserver') + '2'" prop="nameserver1">
+                        <el-input v-model.trim="ssl.nameserver2"></el-input>
+                        <span class="input-help">
+                            {{ $t('ssl.nameserverHelper') }}
+                        </span>
+                    </el-form-item>
                 </el-form>
             </el-col>
         </el-row>
@@ -136,7 +160,7 @@
 <script lang="ts" setup>
 import DrawerHeader from '@/components/drawer-header/index.vue';
 import { Website } from '@/api/interface/website';
-import { CreateSSL, ListWebsites, SearchAcmeAccount, SearchDnsAccount } from '@/api/modules/website';
+import { CreateSSL, ListWebsites, SearchAcmeAccount, SearchDnsAccount, UpdateSSL } from '@/api/modules/website';
 import { Rules } from '@/global/form-rules';
 import i18n from '@/lang';
 import { FormInstance } from 'element-plus';
@@ -178,10 +202,13 @@ const rules = ref({
     autoRenew: [Rules.requiredInput],
     keyType: [Rules.requiredInput],
     dir: [Rules.requiredInput],
+    nameserver1: [Rules.ipv4],
+    nameserver2: [Rules.ipv4],
 });
 const websiteID = ref();
 
 const initData = () => ({
+    id: 0,
     primaryDomain: '',
     otherDomains: '',
     provider: 'dnsAccount',
@@ -193,11 +220,15 @@ const initData = () => ({
     pushDir: false,
     dir: '',
     description: '',
+    disableCNAME: false,
+    skipDNS: false,
+    nameserver1: '',
+    nameserver2: '',
 });
 
 const ssl = ref(initData());
+const operate = ref('create');
 const dnsResolve = ref<Website.DNSResolve[]>([]);
-
 const em = defineEmits(['close', 'submit']);
 const handleClose = () => {
     resetForm();
@@ -211,8 +242,30 @@ const resetForm = () => {
     websiteID.value = undefined;
 };
 
-const acceptParams = () => {
-    resetForm();
+const acceptParams = (op: string, websiteSSL: Website.SSLDTO) => {
+    operate.value = op;
+    if (op == 'create') {
+        resetForm();
+    }
+    if (op == 'edit') {
+        console.log(websiteSSL);
+        ssl.value.acmeAccountId = websiteSSL.acmeAccountId;
+        if (websiteSSL.dnsAccountId > 0) {
+            ssl.value.dnsAccountId = websiteSSL.dnsAccountId;
+        }
+        ssl.value.primaryDomain = websiteSSL.primaryDomain;
+        ssl.value.pushDir = websiteSSL.pushDir;
+        ssl.value.dir = websiteSSL.dir;
+        ssl.value.otherDomains = websiteSSL.domains?.replace(/,/g, '\n');
+        ssl.value.autoRenew = websiteSSL.autoRenew;
+        ssl.value.description = websiteSSL.description;
+        ssl.value.id = websiteSSL.id;
+        ssl.value.provider = websiteSSL.provider;
+        ssl.value.skipDNS = websiteSSL.skipDNS;
+        ssl.value.disableCNAME = websiteSSL.disableCNAME;
+        ssl.value.nameserver1 = websiteSSL.nameserver1;
+        ssl.value.nameserver2 = websiteSSL.nameserver2;
+    }
     ssl.value.websiteId = Number(id.value);
     getAcmeAccounts();
     getDnsAccounts();
@@ -227,7 +280,7 @@ const getPath = (dir: string) => {
 const getAcmeAccounts = async () => {
     const res = await SearchAcmeAccount(acmeReq);
     acmeAccounts.value = res.data.items || [];
-    if (acmeAccounts.value.length > 0) {
+    if (acmeAccounts.value.length > 0 && ssl.value.acmeAccountId == undefined) {
         ssl.value.acmeAccountId = res.data.items[0].id;
     }
 };
@@ -235,7 +288,7 @@ const getAcmeAccounts = async () => {
 const getDnsAccounts = async () => {
     const res = await SearchDnsAccount(dnsReq);
     dnsAccounts.value = res.data.items || [];
-    if (dnsAccounts.value.length > 0) {
+    if (dnsAccounts.value.length > 0 && ssl.value.dnsAccountId == undefined) {
         ssl.value.dnsAccountId = res.data.items[0].id;
     }
 };
@@ -273,17 +326,46 @@ const submit = async (formEl: FormInstance | undefined) => {
             return;
         }
         loading.value = true;
-        CreateSSL(ssl.value)
-            .then((res: any) => {
-                if (ssl.value.provider != 'dnsManual') {
-                    em('submit', res.data.id);
-                }
-                handleClose();
-                MsgSuccess(i18n.global.t('commons.msg.createSuccess'));
-            })
-            .finally(() => {
-                loading.value = false;
-            });
+        if (operate.value == 'create') {
+            CreateSSL(ssl.value)
+                .then((res: any) => {
+                    if (ssl.value.provider != 'dnsManual') {
+                        em('submit', res.data.id);
+                    }
+                    handleClose();
+                    MsgSuccess(i18n.global.t('commons.msg.createSuccess'));
+                })
+                .finally(() => {
+                    loading.value = false;
+                });
+        }
+        if (operate.value == 'edit') {
+            const sslUpdate = {
+                id: ssl.value.id,
+                primaryDomain: ssl.value.primaryDomain,
+                otherDomains: ssl.value.otherDomains,
+                acmeAccountId: ssl.value.acmeAccountId,
+                dnsAccountId: ssl.value.dnsAccountId,
+                autoRenew: ssl.value.autoRenew,
+                keyType: ssl.value.keyType,
+                pushDir: ssl.value.pushDir,
+                dir: ssl.value.dir,
+                description: ssl.value.description,
+                provider: ssl.value.provider,
+                disableCNAME: ssl.value.disableCNAME,
+                skipDNS: ssl.value.skipDNS,
+                nameserver1: ssl.value.nameserver1,
+                nameserver2: ssl.value.nameserver2,
+            };
+            UpdateSSL(sslUpdate)
+                .then(() => {
+                    handleClose();
+                    MsgSuccess(i18n.global.t('commons.msg.updateSuccess'));
+                })
+                .finally(() => {
+                    loading.value = false;
+                });
+        }
     });
 };
 

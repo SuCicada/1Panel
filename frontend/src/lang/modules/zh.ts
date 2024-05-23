@@ -798,6 +798,7 @@ const message = {
         snapshot: '系统快照',
         allOptionHelper: '当前计划任务为备份所有【{0}】，暂不支持直接下载，可在【{0}】备份列表中查看',
         exclusionRules: '排除规则',
+        exclusionRulesHelper: '排除规则将对此次备份的所有压缩操作生效',
         default_download_path: '默认下载地址',
         saveLocal: '同时保留本地备份（和云存储保留份数一致）',
         url: 'URL 地址',
@@ -1100,6 +1101,10 @@ const message = {
         clashDitNotSupport: '文件名禁止包含 .1panel_clash',
         clashDleteAlert: '回收站文件夹不能删除',
         clashOpenAlert: '回收站目录请点击【回收站】按钮打开',
+        right: '前进',
+        back: '后退',
+        top: '返回上一级',
+        refresh: '刷新',
     },
     ssh: {
         autoStart: '开机自启',
@@ -1192,6 +1197,8 @@ const message = {
         noSpace: '输入信息不能包含空格符',
         duplicatePassword: '新密码不能与原始密码一致，请重新输入！',
         diskClean: '缓存清理',
+        developerMode: '预览体验计划',
+        developerModeHelper: '获取 1Panel 的预览版本，以分享有关新功能和更新的反馈',
 
         thirdParty: '第三方账号',
         createBackupAccount: '添加 {0}',
@@ -1261,6 +1268,7 @@ const message = {
         accountKey: '账户密钥',
         address: '地址',
         path: '路径',
+        backupJump: '未在当前备份列表中的备份文件，请尝试从文件目录中下载后导入备份。',
 
         snapshot: '快照',
         ignoreRule: '排除规则',
@@ -1297,8 +1305,6 @@ const message = {
         versionHelper: '1Panel 版本号命名规则为： [大版本].[功能版本].[Bug 修复版本]，例：',
         versionHelper1: 'v1.0.1 是 v1.0.0 之后的 Bug 修复版本',
         versionHelper2: 'v1.1.0 是 v1.0.0 之后的功能版本',
-        newVersion: '(Bug 修复版本)',
-        latestVersion: '(功能版本)',
         upgradeCheck: '检查更新',
         upgradeNotes: '更新内容',
         upgradeNow: '立即更新',
@@ -1575,6 +1581,7 @@ const message = {
         hostModeHelper: '当前应用网络模式为 host 模式，如需放开端口，请在防火墙页面手动放开',
         showLocal: '显示本地应用',
         reload: '重载',
+        upgradeWarn: '升级应用会替换 docker-compose.yml 文件，如有更改，请升级之后替换',
     },
     website: {
         website: '网站',
@@ -1814,6 +1821,7 @@ const message = {
         tencentCloud: '腾讯云',
         containWarn: '其他域名中包含主域名，请重新输入',
         rewriteHelper2: '从应用商店安装的 WordPress 等应用，默认已经配置好伪静态，重复配置可能会报错',
+        websiteBackupWarn: '仅支持导入本机备份，导入其他机器备份可能会恢复失败',
     },
     php: {
         short_open_tag: '短标签支持',
@@ -1918,6 +1926,11 @@ const message = {
         cfHelper: '请勿使用 Global API Key',
         deprecated: '即将废弃',
         deprecatedHelper: '已经停止维护，可能会在以后的某个版本废弃，请使用腾讯云方式解析',
+        disableCNAME: '禁用 CNAME',
+        disableCNAMEHelper: '有 CNAME 配置的域名，如果申请失败，可以勾选此处',
+        nameserver: 'DNS 服务器',
+        nameserverHelper: '使用自定义的 DNS 服务器来校验域名',
+        edit: '编辑证书',
     },
     firewall: {
         create: '创建规则',

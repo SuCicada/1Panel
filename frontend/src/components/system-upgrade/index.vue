@@ -16,9 +16,9 @@
         </span>
         <el-button type="primary" link @click="toHalo">
             {{ isProductPro ? $t('license.pro') : $t('license.community') }}
-            <span class="version">{{ version }}</span>
         </el-button>
-        <el-badge is-dot style="margin-left: -3px" v-if="version !== 'Waiting' && globalStore.hasNewVersion">
+        <span class="version">{{ version }}</span>
+        <el-badge is-dot style="margin-top: -3px" v-if="version !== 'Waiting' && globalStore.hasNewVersion">
             <el-button type="primary" link @click="onLoadUpgradeInfo">
                 <span>({{ $t('setting.hasNewVersion') }})</span>
             </el-button>
@@ -48,10 +48,13 @@
             </div>
             <el-radio-group class="inline-block tag" v-model="upgradeVersion" @change="changeOption">
                 <el-radio v-if="upgradeInfo.newVersion" :value="upgradeInfo.newVersion">
-                    {{ upgradeInfo.newVersion }} {{ $t('setting.newVersion') }}
+                    {{ upgradeInfo.newVersion }}
                 </el-radio>
-                <el-radio :value="upgradeInfo.latestVersion">
-                    {{ upgradeInfo.latestVersion }} {{ $t('setting.latestVersion') }}
+                <el-radio v-if="upgradeInfo.latestVersion" :value="upgradeInfo.latestVersion">
+                    {{ upgradeInfo.latestVersion }}
+                </el-radio>
+                <el-radio v-if="upgradeInfo.testVersion" :value="upgradeInfo.testVersion">
+                    {{ upgradeInfo.testVersion }}
                 </el-radio>
             </el-radio-group>
             <MdEditor
@@ -124,13 +127,25 @@ const onLoadUpgradeInfo = async () => {
     await loadUpgradeInfo()
         .then((res) => {
             loading.value = false;
-            if (!res.data) {
+            if (res.data.testVersion || res.data.newVersion || res.data.latestVersion) {
+                upgradeInfo.value = res.data;
+                drawerVisible.value = true;
+                if (upgradeInfo.value.newVersion) {
+                    upgradeVersion.value = upgradeInfo.value.newVersion;
+                    return;
+                }
+                if (upgradeInfo.value.latestVersion) {
+                    upgradeVersion.value = upgradeInfo.value.latestVersion;
+                    return;
+                }
+                if (upgradeInfo.value.testVersion) {
+                    upgradeVersion.value = upgradeInfo.value.testVersion;
+                    return;
+                }
+            } else {
                 MsgSuccess(i18n.global.t('setting.noUpgrade'));
                 return;
             }
-            upgradeInfo.value = res.data;
-            upgradeVersion.value = upgradeInfo.value.newVersion || upgradeInfo.value.latestVersion;
-            drawerVisible.value = true;
         })
         .catch(() => {
             loading.value = false;
