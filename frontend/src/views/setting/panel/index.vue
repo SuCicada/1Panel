@@ -198,12 +198,22 @@
                             </template>
                         </el-input>
                     </el-form-item>
+                    <el-form-item label="alert url" prop="alertUrl">
+                        <el-input disabled v-model="form.alertUrl">
+                            <template #append>
+                                <el-button @click="onChangeAlertUrl()" icon="Setting">
+                                    {{ $t('commons.button.set') }}
+                                </el-button>
+                            </template>
+                        </el-input>
+                    </el-form-item>
                 </el-form>
             </template>
         </LayoutContent>
 
         <Password ref="passwordRef" />
         <UserName ref="userNameRef" />
+        <AlertUrl ref="alertUrlRef" />
         <PanelName ref="panelNameRef" @search="search()" />
         <SystemIP ref="systemIPRef" @search="search()" />
         <Proxy ref="proxyRef" @search="search()" />
@@ -225,6 +235,7 @@ import { useTheme } from '@/hooks/use-theme';
 import { MsgSuccess } from '@/utils/message';
 import Password from '@/views/setting/panel/password/index.vue';
 import UserName from '@/views/setting/panel/username/index.vue';
+import AlertUrl from '@/views/setting/panel/alerturl/index.vue';
 import Timeout from '@/views/setting/panel/timeout/index.vue';
 import PanelName from '@/views/setting/panel/name/index.vue';
 import SystemIP from '@/views/setting/panel/systemip/index.vue';
@@ -293,12 +304,14 @@ const form = reactive({
 
     proHideMenus: ref(i18n.t('setting.unSetting')),
     hideMenuList: '',
+    alertUrl: '',
 });
 
 const show = ref();
 
 const userNameRef = ref();
 const passwordRef = ref();
+const alertUrlRef = ref();
 const panelNameRef = ref();
 const systemIPRef = ref();
 const proxyRef = ref();
@@ -362,6 +375,7 @@ const search = async () => {
     form.apiKey = res.data.apiKey;
     form.ipWhiteList = res.data.ipWhiteList;
     form.apiKeyValidityTime = res.data.apiKeyValidityTime;
+    form.alertUrl = res.data.alertUrl;
 
     const json: Node = JSON.parse(res.data.xpackHideMenu);
     const checkedTitles = getCheckedTitles(json);
@@ -412,6 +426,11 @@ const onChangePassword = () => {
 const onChangeUserName = () => {
     userNameRef.value.acceptParams({ userName: form.userName });
 };
+
+const onChangeAlertUrl = () => {
+    alertUrlRef.value.acceptParams({ alertUrl: form.alertUrl });
+};
+
 const onChangeTitle = () => {
     panelNameRef.value.acceptParams({ panelName: form.panelName });
 };

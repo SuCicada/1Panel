@@ -19,7 +19,7 @@ upx_bin:
 	upx $(BUILD_PATH)/$(APP_NAME)
 
 build_frontend:
-	cd $(WEB_PATH) && npm install && npm run build:pro
+	cd $(WEB_PATH) && pnpm install && pnpm run build:pro
 
 build_backend_on_linux:
 	cd $(SERVER_PATH) \

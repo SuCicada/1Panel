@@ -21,7 +21,6 @@ import (
 	"github.com/1Panel-dev/1Panel/backend/utils/cmd"
 	"github.com/1Panel-dev/1Panel/backend/utils/files"
 	"github.com/1Panel-dev/1Panel/backend/utils/ntp"
-	"github.com/1Panel-dev/1Panel/backend/utils/xpack"
 	"github.com/pkg/errors"
 )
 
@@ -402,7 +401,7 @@ func handleCronJobAlert(cronjob *model.Cronjob) {
 		EntryID:   cronjob.ID,
 		Param:     cronjob.Type,
 	}
-	err := xpack.PushAlert(pushAlert)
+	err := Alert.PushAlert(pushAlert)
 	if err != nil {
 		global.LOG.Errorf("cronjob alert push failed, err: %v", err)
 		return

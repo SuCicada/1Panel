@@ -71,6 +71,8 @@ type SettingInfo struct {
 	ApiKey             string `json:"apiKey"`
 	IpWhiteList        string `json:"ipWhiteList"`
 	ApiKeyValidityTime string `json:"apiKeyValidityTime"`
+
+	AlertUrl string `json:"alertUrl"`
 }
 
 type SettingUpdate struct {

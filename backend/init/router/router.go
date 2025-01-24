@@ -150,7 +150,7 @@ func setWebStatic(rootRouter *gin.RouterGroup) {
 func Routers() *gin.Engine {
 	Router = gin.Default()
 	Router.Use(middleware.OperationLog())
-	// Router.Use(middleware.CSRF())
+	Router.Use(middleware.Cors())
 	// Router.Use(middleware.LoadCsrfToken())
 	if global.CONF.System.IsDemo {
 		Router.Use(middleware.DemoHandle())

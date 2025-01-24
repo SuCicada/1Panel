@@ -333,7 +333,7 @@ const login = (formEl: FormInstance | undefined) => {
                     errAuthInfo.value = false;
                 }
                 if (res.message === 'ErrAuth') {
-                    globalStore.ignoreCaptcha = false;
+                    globalStore.ignoreCaptcha = true;
                     errCaptcha.value = false;
                     errAuthInfo.value = true;
                 }

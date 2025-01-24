@@ -64,7 +64,9 @@ func (c *SettingRepo) WithByKey(key string) DBOption {
 }
 
 func (u *SettingRepo) Update(key, value string) error {
-	return global.DB.Model(&model.Setting{}).Where("key = ?", key).Updates(map[string]interface{}{"value": value}).Error
+	return global.DB.Model(&model.Setting{}).Where("key = ?", key).
+		Assign(map[string]interface{}{"value": value}).
+		FirstOrCreate(&model.Setting{Key: key}).Error
 }
 
 func (u *SettingRepo) CreateMonitorBase(model model.MonitorBase) error {

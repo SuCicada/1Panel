@@ -21,6 +21,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const viteEnv = wrapperEnv(env);
 
     return {
+        // optimizeDeps:{
+        //     esbuildOptions: {
+        //         format: 'esm', // 强制使用 ESM 格式
+        //     },
+        // },
+        cacheDir: "./.vite",
         resolve: {
             alias: {
                 '@': resolve(__dirname, './src'),

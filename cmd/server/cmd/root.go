@@ -75,6 +75,7 @@ func setSettingByKey(db *gorm.DB, key, value string) error {
 }
 
 func isRoot() bool {
+	//return true
 	currentUser, err := user.Current()
 	if err != nil {
 		return false
