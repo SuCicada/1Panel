@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/1Panel-dev/1Panel/backend/app/dto"
+	"github.com/1Panel-dev/1Panel/backend/global"
 	"github.com/1Panel-dev/1Panel/backend/utils/xpack"
 	"net/http"
 	"strings"
@@ -32,7 +33,7 @@ func (s *sAlert) PushAlert(pushAlert dto.PushAlert) error {
 
 	jsonData, _ := json.Marshal(data)
 	url := setting.AlertUrl
-	//url := "sss"
+	global.LOG.Infoln("send alert to url: ", url, title)
 	req, err := http.NewRequest("POST", url, strings.NewReader(string(jsonData)))
 	if err != nil {
 		return err
