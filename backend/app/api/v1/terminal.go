@@ -68,12 +68,11 @@ func (b *BaseApi) WsSsh(c *gin.Context) {
 
 	<-quitChan
 
-	if wshandleError(wsConn, err) {
-		return
-	}
+	dt := time.Now().Add(time.Second)
+	_ = wsConn.WriteControl(websocket.CloseMessage, nil, dt)
 }
 
-func (b *BaseApi) RedisWsSsh(c *gin.Context) {
+func (b *BaseApi) ContainerWsSSH(c *gin.Context) {
 	wsConn, err := upGrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		global.LOG.Errorf("gin context http handler failed, err: %v", err)
@@ -95,38 +94,30 @@ func (b *BaseApi) RedisWsSsh(c *gin.Context) {
 	if wshandleError(wsConn, errors.WithMessage(err, "invalid param rows in request")) {
 		return
 	}
-	name := c.Query("name")
-	from := c.Query("from")
-	commands := []string{"redis-cli"}
-	database, err := databaseService.Get(name)
-	if wshandleError(wsConn, errors.WithMessage(err, "no such database in db")) {
-		return
-	}
-	if from == "local" {
-		redisInfo, err := appInstallService.LoadConnInfo(dto.OperationWithNameAndType{Name: name, Type: "redis"})
-		if wshandleError(wsConn, errors.WithMessage(err, "no such database in db")) {
+	source := c.Query("source")
+	var containerID string
+	var initCmd []string
+	switch source {
+	case "redis":
+		containerID, initCmd, err = loadRedisInitCmd(c)
+	case "ollama":
+		containerID, initCmd, err = loadOllamaInitCmd(c)
+	case "container":
+		containerID, initCmd, err = loadContainerInitCmd(c)
+	default:
+		if wshandleError(wsConn, fmt.Errorf("not support such source %s", source)) {
 			return
 		}
-		name = redisInfo.ContainerName
-		if len(database.Password) != 0 {
-			commands = []string{"redis-cli", "-a", database.Password, "--no-auth-warning"}
-		}
-	} else {
-		itemPort := fmt.Sprintf("%v", database.Port)
-		commands = []string{"redis-cli", "-h", database.Address, "-p", itemPort}
-		if len(database.Password) != 0 {
-			commands = []string{"redis-cli", "-h", database.Address, "-p", itemPort, "-a", database.Password, "--no-auth-warning"}
-		}
-		name = "1Panel-redis-cli-tools"
 	}
-
-	pidMap := loadMapFromDockerTop(name)
-	itemCmds := append([]string{"exec", "-it", name}, commands...)
-	slave, err := terminal.NewCommand(itemCmds)
 	if wshandleError(wsConn, err) {
 		return
 	}
-	defer killBash(name, strings.Join(commands, " "), pidMap)
+	pidMap := loadMapFromDockerTop(containerID)
+	slave, err := terminal.NewCommand(initCmd)
+	if wshandleError(wsConn, err) {
+		return
+	}
+	defer killBash(containerID, strings.ReplaceAll(strings.Join(initCmd, " "), fmt.Sprintf("exec -it %s ", containerID), ""), pidMap)
 	defer slave.Close()
 
 	tty, err := terminal.NewLocalWsSession(cols, rows, wsConn, slave, false)
@@ -141,83 +132,68 @@ func (b *BaseApi) RedisWsSsh(c *gin.Context) {
 	<-quitChan
 
 	global.LOG.Info("websocket finished")
-	if wshandleError(wsConn, err) {
-		return
-	}
+	dt := time.Now().Add(time.Second)
+	_ = wsConn.WriteControl(websocket.CloseMessage, nil, dt)
+
 }
 
-func (b *BaseApi) ContainerWsSsh(c *gin.Context) {
-	wsConn, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+func loadRedisInitCmd(c *gin.Context) (string, []string, error) {
+	name := c.Query("name")
+	from := c.Query("from")
+	commands := []string{"exec", "-it"}
+	database, err := databaseService.Get(name)
 	if err != nil {
-		global.LOG.Errorf("gin context http handler failed, err: %v", err)
-		return
+		return "", nil, fmt.Errorf("no such database in db, err: %v", err)
 	}
-	defer wsConn.Close()
-
-	if global.CONF.System.IsDemo {
-		if wshandleError(wsConn, errors.New("   demo server, prohibit this operation!")) {
-			return
+	if from == "local" {
+		redisInfo, err := appInstallService.LoadConnInfo(dto.OperationWithNameAndType{Name: name, Type: "redis"})
+		if err != nil {
+			return "", nil, fmt.Errorf("no such app in db, err: %v", err)
+		}
+		name = redisInfo.ContainerName
+		commands = append(commands, []string{name, "redis-cli"}...)
+		if len(database.Password) != 0 {
+			commands = append(commands, []string{"-a", database.Password, "--no-auth-warning"}...)
+		}
+	} else {
+		name = "1Panel-redis-cli-tools"
+		commands = append(commands, []string{name, "redis-cli", "-h", database.Address, "-p", fmt.Sprintf("%v", database.Port)}...)
+		if len(database.Password) != 0 {
+			commands = append(commands, []string{"-a", database.Password, "--no-auth-warning"}...)
 		}
 	}
+	return name, commands, nil
+}
 
+func loadOllamaInitCmd(c *gin.Context) (string, []string, error) {
+	name := c.Query("name")
+	if cmd.CheckIllegal(name) {
+		return "", nil, fmt.Errorf("ollama model %s contains illegal characters", name)
+	}
+	ollamaInfo, err := appInstallService.LoadConnInfo(dto.OperationWithNameAndType{Name: "", Type: "ollama"})
+	if err != nil {
+		return "", nil, fmt.Errorf("no such app in db, err: %v", err)
+	}
+	containerName := ollamaInfo.ContainerName
+	return containerName, []string{"exec", "-it", containerName, "ollama", "run", name}, nil
+}
+
+func loadContainerInitCmd(c *gin.Context) (string, []string, error) {
 	containerID := c.Query("containerid")
 	command := c.Query("command")
 	user := c.Query("user")
-	if len(command) == 0 || len(containerID) == 0 {
-		if wshandleError(wsConn, errors.New("error param of command or containerID")) {
-			return
-		}
-	}
-	cols, err := strconv.Atoi(c.DefaultQuery("cols", "80"))
-	if wshandleError(wsConn, errors.WithMessage(err, "invalid param cols in request")) {
-		return
-	}
-	rows, err := strconv.Atoi(c.DefaultQuery("rows", "40"))
-	if wshandleError(wsConn, errors.WithMessage(err, "invalid param rows in request")) {
-		return
-	}
-
-	cmds := []string{"exec", containerID, command}
-	if len(user) != 0 {
-		cmds = []string{"exec", "-u", user, containerID, command}
-	}
 	if cmd.CheckIllegal(user, containerID, command) {
-		if wshandleError(wsConn, errors.New("  The command contains illegal characters.")) {
-			return
-		}
+		return "", nil, fmt.Errorf("the command contains illegal characters. command: %s, user: %s, containerID: %s", command, user, containerID)
 	}
-	stdout, err := cmd.ExecWithCheck("docker", cmds...)
-	if wshandleError(wsConn, errors.WithMessage(err, stdout)) {
-		return
+	if len(command) == 0 || len(containerID) == 0 {
+		return "", nil, fmt.Errorf("error param of command: %s or containerID: %s", command, containerID)
 	}
-
 	commands := []string{"exec", "-it", containerID, command}
 	if len(user) != 0 {
 		commands = []string{"exec", "-it", "-u", user, containerID, command}
 	}
-	pidMap := loadMapFromDockerTop(containerID)
-	slave, err := terminal.NewCommand(commands)
-	if wshandleError(wsConn, err) {
-		return
-	}
-	defer killBash(containerID, command, pidMap)
-	defer slave.Close()
 
-	tty, err := terminal.NewLocalWsSession(cols, rows, wsConn, slave, true)
-	if wshandleError(wsConn, err) {
-		return
-	}
-
-	quitChan := make(chan bool, 3)
-	tty.Start(quitChan)
-	go slave.Wait(quitChan)
-
-	<-quitChan
-
-	global.LOG.Info("websocket finished")
-	if wshandleError(wsConn, err) {
-		return
-	}
+	return containerID, commands, nil
 }
 
 func wshandleError(ws *websocket.Conn, err error) bool {

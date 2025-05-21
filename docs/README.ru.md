@@ -1,4 +1,4 @@
-<p align="center"><a href="https://1panel.hk"><img src="https://resource.1panel.hk/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
+<p align="center"><a href="https://1panel.pro"><img src="https://resource.1panel.pro/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
 <p align="center"><b>Высококлассная веб-панель управления Linux-серверами</b></p>
 <p align="center">
   <a href="https://trendshift.io/repositories/2462" target="_blank"><img src="https://trendshift.io/api/badge/repositories/2462" alt="1Panel-dev%2F1Panel | Trendshift" style="width: 180px; height: auto;" /></a>
@@ -45,14 +45,14 @@
 Выполните скрипт ниже и следуйте инструкциям для установки 1Panel:
 
 ```bash
-curl -sSL https://resource.1panel.hk/quick_start.sh -o quick_start.sh && bash quick_start.sh
+curl -sSL https://resource.1panel.pro/quick_start.sh -o quick_start.sh && bash quick_start.sh
 ```
 
-Для получения дополнительной информации обратитесь к нашей [документации](https://docs.1panel.hk/quick_start/).
+Для получения дополнительной информации обратитесь к нашей [документации](https://docs.1panel.pro/quick_start/).
 
 ## Скриншот
 
-![Интерфейс](https://resource.1panel.hk/img/1panel.png)
+![Интерфейс](https://resource.1panel.pro/img/1panel.png)
 
 ## История звезд
 

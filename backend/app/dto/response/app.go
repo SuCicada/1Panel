@@ -23,29 +23,31 @@ type AppUpdateRes struct {
 
 type AppDTO struct {
 	model.App
-	Installed bool        `json:"installed"`
-	Versions  []string    `json:"versions"`
-	Tags      []model.Tag `json:"tags"`
+	Installed bool     `json:"installed"`
+	Versions  []string `json:"versions"`
+	Tags      []TagDTO `json:"tags"`
 }
 
 type AppItem struct {
-	Name        string      `json:"name"`
-	Key         string      `json:"key"`
-	ID          uint        `json:"id"`
-	ShortDescZh string      `json:"shortDescZh"`
-	ShortDescEn string      `json:"shortDescEn"`
-	Icon        string      `json:"icon"`
-	Type        string      `json:"type"`
-	Status      string      `json:"status"`
-	Resource    string      `json:"resource"`
-	Installed   bool        `json:"installed"`
-	Versions    []string    `json:"versions"`
-	Limit       int         `json:"limit"`
-	Tags        []model.Tag `json:"tags"`
+	Name        string   `json:"name"`
+	Key         string   `json:"key"`
+	ID          uint     `json:"id"`
+	Description string   `json:"description"`
+	Icon        string   `json:"icon"`
+	Type        string   `json:"type"`
+	Status      string   `json:"status"`
+	Resource    string   `json:"resource"`
+	Installed   bool     `json:"installed"`
+	Versions    []string `json:"versions"`
+	Limit       int      `json:"limit"`
+	Tags        []TagDTO `json:"tags"`
+	GpuSupport  bool     `json:"gpuSupport"`
 }
 
 type TagDTO struct {
-	model.Tag
+	ID   uint   `json:"id"`
+	Key  string `json:"key"`
+	Name string `json:"name"`
 }
 
 type AppInstalledCheck struct {
@@ -65,10 +67,11 @@ type AppInstalledCheck struct {
 
 type AppDetailDTO struct {
 	model.AppDetail
-	Enable   bool        `json:"enable"`
-	Params   interface{} `json:"params"`
-	Image    string      `json:"image"`
-	HostMode bool        `json:"hostMode"`
+	Enable     bool        `json:"enable"`
+	Params     interface{} `json:"params"`
+	Image      string      `json:"image"`
+	HostMode   bool        `json:"hostMode"`
+	GpuSupport bool        `json:"gpuSupport"`
 }
 
 type IgnoredApp struct {
@@ -89,9 +92,10 @@ type AppInstalledDTO struct {
 }
 
 type AppDetail struct {
-	Website  string `json:"website"`
-	Document string `json:"document"`
-	Github   string `json:"github"`
+	Website    string `json:"website"`
+	Document   string `json:"document"`
+	Github     string `json:"github"`
+	GpuSupport bool   `json:"gpuSupport"`
 }
 
 type AppInstallDTO struct {

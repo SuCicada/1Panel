@@ -109,13 +109,20 @@ func handleNoRoute(c *gin.Context) {
 	c.Data(statusCode, "text/html; charset=utf-8", data)
 }
 
+func checkSession(c *gin.Context) bool {
+	sId, err := c.Cookie(constant.SessionName)
+	if err != nil {
+		return false
+	}
+	_, err = global.SESSION.Get(sId)
+	return err == nil
+}
+
 func setWebStatic(rootRouter *gin.RouterGroup) {
 	rootRouter.StaticFS("/public", http.FS(web.Favicon))
 	rootRouter.StaticFS("/favicon.ico", http.FS(web.Favicon))
 	rootRouter.Static("/api/v1/images", "./uploads")
-	rootRouter.Use(func(c *gin.Context) {
-		c.Next()
-	})
+
 	rootRouter.GET("/assets/*filepath", func(c *gin.Context) {
 		c.Writer.Header().Set("Cache-Control", fmt.Sprintf("private, max-age=%d", 3600))
 		staticServer := http.FileServer(http.FS(web.Assets))
@@ -138,9 +145,14 @@ func setWebStatic(rootRouter *gin.RouterGroup) {
 		})
 	}
 	rootRouter.GET("/", func(c *gin.Context) {
-		if !checkEntrance(c) {
+		if !checkEntrance(c) && !checkSession(c) {
 			handleNoRoute(c)
 			return
+		}
+		entrance = authService.GetSecurityEntrance()
+		if entrance != "" {
+			entranceValue := base64.StdEncoding.EncodeToString([]byte(entrance))
+			c.SetCookie("SecurityEntrance", entranceValue, 0, "", "", false, true)
 		}
 		staticServer := http.FileServer(http.FS(web.IndexHtml))
 		staticServer.ServeHTTP(c.Writer, c.Request)
@@ -158,6 +170,7 @@ func Routers() *gin.Engine {
 
 	Router.Use(middleware.WhiteAllow())
 	Router.Use(middleware.BindDomain())
+	Router.Use(middleware.SetPasswordPublicKey())
 
 	Router.NoRoute(func(c *gin.Context) {
 		if checkFrontendPath(c) {
@@ -175,7 +188,12 @@ func Routers() *gin.Engine {
 
 	swaggerRouter := Router.Group("1panel")
 	docs.SwaggerInfo.BasePath = "/api/v1"
-	swaggerRouter.Use(middleware.JwtAuth()).Use(middleware.SessionAuth()).GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	swaggerRouter.GET("/swagger/*any", func(c *gin.Context) {
+		if !checkSession(c) {
+			handleNoRoute(c)
+			return
+		}
+	}, ginSwagger.WrapHandler(swaggerfiles.Handler))
 	PublicGroup := Router.Group("")
 	{
 		PublicGroup.GET("/health", func(c *gin.Context) {

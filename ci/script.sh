@@ -18,11 +18,11 @@ if [ ! -f "install.sh" ]; then
 fi
 
 if [ ! -f "GeoIP.mmdb" ]; then 
-  wget https://resource.1panel.hk/geo/GeoIP.mmdb
+  wget https://resource.1panel.pro/geo/GeoIP.mmdb
 fi
 
 if [ ! -f "lang.tar.gz" ]; then 
-  wget https://resource.1panel.hk/language/lang.tar.gz
+  wget https://resource.1panel.pro/language/lang.tar.gz
   tar zxvf lang.tar.gz
   rm -rf lang.tar.gz
 fi

@@ -1051,6 +1051,8 @@ func getApps(oldApps []model.App, items []dto.AppDefine) map[string]model.App {
 		app.Key = key
 		app.ShortDescZh = config.ShortDescZh
 		app.ShortDescEn = config.ShortDescEn
+		description, _ := json.Marshal(config.Description)
+		app.Description = string(description)
 		app.Website = config.Website
 		app.Document = config.Document
 		app.Github = config.Github
@@ -1150,14 +1152,31 @@ func handleLocalApp(appDir string) (app *model.App, err error) {
 		err = buserr.WithMap(constant.ErrFileParseApp, map[string]interface{}{"name": "data.yml", "err": err.Error()}, err)
 		return
 	}
-	app = &localAppDefine.AppProperty
+	appDefine := localAppDefine.AppProperty
+	app = &model.App{}
+	app.Name = appDefine.Name
+	app.TagsKey = append(appDefine.Tags, "Local")
+	app.Type = appDefine.Type
+	app.CrossVersionUpdate = appDefine.CrossVersionUpdate
+	app.Limit = appDefine.Limit
+	app.Recommend = appDefine.Recommend
+	app.Website = appDefine.Website
+	app.Github = appDefine.Github
+	app.Document = appDefine.Document
+	if appDefine.ShortDescZh != "" {
+		app.ShortDescZh = appDefine.ShortDescZh
+	}
+	if appDefine.ShortDescEn != "" {
+		app.ShortDescEn = appDefine.ShortDescEn
+	}
+	desc, _ := json.Marshal(appDefine.Description)
+	app.Description = string(desc)
+
+	app.Key = "local" + appDefine.Key
 	app.Resource = constant.AppResourceLocal
 	app.Status = constant.AppNormal
 	app.Recommend = 9999
-	app.TagsKey = append(app.TagsKey, "Local")
-	app.Key = "local" + app.Key
-	readMePath := path.Join(appDir, "README.md")
-	readMeByte, err := fileOp.GetContent(readMePath)
+	readMeByte, err := fileOp.GetContent(path.Join(appDir, "README.md"))
 	if err == nil {
 		app.ReadMe = string(readMeByte)
 	}
@@ -1319,9 +1338,10 @@ func handleInstalled(appInstallList []model.AppInstall, updated bool, sync bool)
 			Path:        installed.GetPath(),
 			CreatedAt:   installed.CreatedAt,
 			App: response.AppDetail{
-				Github:   installed.App.Github,
-				Website:  installed.App.Website,
-				Document: installed.App.Document,
+				Github:     installed.App.Github,
+				Website:    installed.App.Website,
+				Document:   installed.App.Document,
+				GpuSupport: installed.App.GpuSupport,
 			},
 		}
 		if updated {
@@ -1480,6 +1500,20 @@ func addDockerComposeCommonParam(composeMap map[string]interface{}, serviceName 
 	deploy["resources"] = resource
 	serviceValue["deploy"] = deploy
 
+	if req.GpuConfig {
+		resource["reservations"] = map[string]interface{}{
+			"devices": []map[string]interface{}{
+				{
+					"driver":       "nvidia",
+					"count":        "all",
+					"capabilities": []string{"gpu"},
+				},
+			},
+		}
+	} else {
+		delete(resource, "reservations")
+	}
+
 	ports, ok := serviceValue["ports"].([]interface{})
 	if ok {
 		for i, port := range ports {
@@ -1581,9 +1615,74 @@ func isHostModel(dockerCompose string) bool {
 	return false
 }
 
+func isGpuConfig(dockerCompose string) bool {
+	composeMap := make(map[string]interface{})
+	_ = yaml.Unmarshal([]byte(dockerCompose), &composeMap)
+	services, serviceValid := composeMap["services"].(map[string]interface{})
+	if !serviceValid {
+		return false
+	}
+	for _, service := range services {
+		serviceValue := service.(map[string]interface{})
+		deploy := map[string]interface{}{}
+		if de, ok := serviceValue["deploy"]; ok {
+			deploy = de.(map[string]interface{})
+		}
+		resource := map[string]interface{}{}
+		if res, ok := deploy["resources"]; ok {
+			resource = res.(map[string]interface{})
+		}
+		if reservations, ok := resource["reservations"]; ok {
+			reservationsMap := reservations.(map[string]interface{})
+			if _, dOk := reservationsMap["devices"]; dOk {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func RequestDownloadCallBack(downloadCallBackUrl string) {
 	if downloadCallBackUrl == "" {
 		return
 	}
 	_, _, _ = httpUtil.HandleGet(downloadCallBackUrl, http.MethodGet, constant.TimeOut5s)
+}
+
+func getAppTags(appID uint, lang string) ([]response.TagDTO, error) {
+	appTags, err := appTagRepo.GetByAppId(appID)
+	if err != nil {
+		return nil, err
+	}
+	var tagIds []uint
+	for _, at := range appTags {
+		tagIds = append(tagIds, at.TagId)
+	}
+	tags, err := tagRepo.GetByIds(tagIds)
+	if err != nil {
+		return nil, err
+	}
+	var res []response.TagDTO
+	for _, t := range tags {
+		if t.Name != "" {
+			tagDTO := response.TagDTO{
+				ID:   t.ID,
+				Key:  t.Key,
+				Name: t.Name,
+			}
+			res = append(res, tagDTO)
+		} else {
+			var translations = make(map[string]string)
+			_ = json.Unmarshal([]byte(t.Translations), &translations)
+			if name, ok := translations[lang]; ok {
+				tagDTO := response.TagDTO{
+					ID:   t.ID,
+					Key:  t.Key,
+					Name: name,
+				}
+				res = append(res, tagDTO)
+			}
+		}
+	}
+	return res, nil
 }

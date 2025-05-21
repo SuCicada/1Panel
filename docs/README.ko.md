@@ -1,4 +1,4 @@
-<p align="center"><a href="https://1panel.hk"><img src="https://resource.1panel.hk/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
+<p align="center"><a href="https://1panel.pro"><img src="https://resource.1panel.pro/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
 <p align="center"><b>최고 평점의 웹 기반 리눅스 서버 관리 도구</b></p>
 <p align="center">
   <a href="https://trendshift.io/repositories/2462" target="_blank"><img src="https://trendshift.io/api/badge/repositories/2462" alt="1Panel-dev%2F1Panel | Trendshift" style="width: 180px; height: auto;" /></a>
@@ -45,14 +45,14 @@
 아래 스크립트를 실행하고 프롬프트에 따라 1Panel을 설치하세요:
 
 ```bash
-curl -sSL https://resource.1panel.hk/quick_start.sh -o quick_start.sh && bash quick_start.sh
+curl -sSL https://resource.1panel.pro/quick_start.sh -o quick_start.sh && bash quick_start.sh
 ```
 
-자세한 내용은 [문서](https://docs.1panel.hk/quick_start/)를 참조하세요.
+자세한 내용은 [문서](https://docs.1panel.pro/quick_start/)를 참조하세요.
 
 ## 스크린샷
 
-![UI 디스플레이](https://resource.1panel.hk/img/1panel.png)
+![UI 디스플레이](https://resource.1panel.pro/img/1panel.png)
 
 ## 스타 히스토리
 

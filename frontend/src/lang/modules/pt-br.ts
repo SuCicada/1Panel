@@ -15,6 +15,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: 'Executar',
             create: 'Criar',
             add: 'Adicionar',
             save: 'Salvar',
@@ -60,7 +61,7 @@ const message = {
             copy: 'Copiar',
             random: 'Aleatório',
             uninstall: 'Desinstalar',
-            fullscreen: 'Entrar em tela cheia',
+            fullscreen: 'Tela Cheia',
             quitFullscreen: 'Sair da tela cheia',
             update: 'Editar',
             showAll: 'Exibir tudo',
@@ -74,6 +75,8 @@ const message = {
             createNewFile: 'Criar novo arquivo',
             helpDoc: 'Documento de ajuda',
             unbind: 'Desvincular',
+            cover: 'Substituir',
+            skip: 'Pular',
         },
         search: {
             timeStart: 'Hora inicial',
@@ -110,6 +113,7 @@ const message = {
             refreshRate: 'Taxa de atualização',
             refreshRateUnit: 'Sem atualização | {n} segundo/atualização | {n} segundos/atualização',
             selectColumn: 'Selecionar coluna',
+            serialNumber: 'Número de série',
         },
         loadingText: {
             Upgrading: 'Atualizando o sistema, por favor, aguarde...',
@@ -188,6 +192,7 @@ const message = {
             rePassword: 'A confirmação da senha não corresponde à senha.',
             requiredInput: 'Este campo é obrigatório.',
             requiredSelect: 'Selecione um item na lista',
+            illegalChar: 'Atualmente não há suporte para injeção dos caracteres & ; $ \' ` ( ) " > < |',
             illegalInput: 'Este campo não deve conter caracteres ilegais.',
             commonName:
                 'Este campo deve começar com caracteres não especiais e consistir em letras, números, ".", "-", e "_" com comprimento de 1-128.',
@@ -225,9 +230,9 @@ const message = {
             paramComplexity:
                 'Este campo não deve começar ou terminar com caracteres especiais e deve conter letras, números e "{0}" com comprimento de 6-128.',
             paramUrlAndPort: 'Este campo deve estar no formato "http(s)://(nome do domínio/IP):(porta)".',
-            nginxDoc: 'Este campo deve conter letras, números e ".".',
+            nginxDoc: 'Este campo deve conter letras, _, números e ".".',
             appName:
-                'Este campo não deve começar ou terminar com "-" ou "_" e deve conter letras, números, "-", e "_" com comprimento de 2-30.',
+                'Suporta letras minúsculas, números, - e _, comprimento de 2 a 30, e não pode começar ou terminar com - ou _',
             containerName:
                 'Suporta letras, números, "-", "_" e "."; não pode começar com "-", "_" ou "."; comprimento: 2-128.',
             mirror: 'O endereço de aceleração do mirror deve começar com http(s)://, suportar letras (maiúsculas e minúsculas), números, ".", "/" e "-", e não deve conter linhas em branco.',
@@ -332,6 +337,7 @@ const message = {
         firewall: 'Firewall',
         ssl: 'Certificado | Certificados',
         database: 'Banco de Dados | Bancos de Dados',
+        ai_tools: 'AI',
         container: 'Container | Containers',
         cronjob: 'Tarefa Cron | Tarefas Cron',
         host: 'Host | Hosts',
@@ -428,6 +434,8 @@ const message = {
         permission: 'Permissões',
         permissionForIP: 'IP',
         permissionAll: 'Todos (% de)',
+        localhostHelper:
+            'Configurar permissões de banco de dados como "localhost" para implantação em contêiner impedirá o acesso externo ao contêiner. Por favor, escolha com cuidado!',
         databaseConnInfo: 'Informações de conexão',
         rootPassword: 'Senha root',
         serviceName: 'Nome do serviço',
@@ -439,6 +447,7 @@ const message = {
         remoteConnHelper:
             'Conectar-se ao MySQL como usuário root pode representar riscos de segurança. Realize esta operação com cautela.',
         changePassword: 'Senha',
+        changeConnHelper: 'Esta operação modificará o banco de dados atual {0}. Deseja continuar?',
         changePasswordHelper:
             'O banco de dados está associado a um aplicativo. Alterar a senha alterará a senha do banco de dados do aplicativo ao mesmo tempo. A mudança surtirá efeito após a reinicialização do aplicativo.',
 
@@ -596,6 +605,58 @@ const message = {
         remoteConnHelper2:
             'Este endereço de conexão pode ser utilizado por aplicações que estão fora do contêiner ou por aplicações externas.',
         localIP: 'IP local',
+    },
+    ai_tools: {
+        model: {
+            model: 'Modelo',
+            create: 'Adicionar Modelo',
+            create_helper: 'Puxar "{0}"',
+            ollama_doc: 'Você pode visitar o site oficial da Ollama para pesquisar e encontrar mais modelos.',
+            container_conn_helper: 'Use este endereço para acesso ou conexão entre contêineres',
+            ollama_sync:
+                'Menyelaraskan model Ollama mendapati model berikut tidak wujud, adakah anda ingin memadamnya?',
+            from_remote: 'Model ini tidak dimuat turun melalui 1Panel, tiada log pengambilan berkaitan.',
+            no_logs: 'Log pengambilan untuk model ini telah dipadam dan tidak dapat dilihat.',
+        },
+        gpu: {
+            gpu: 'Monitor de GPU',
+            base: 'Informações Básicas',
+            gpuHelper:
+                'Comando NVIDIA-SMI ou XPU-SMI não detectado no sistema atual. Por favor, verifique e tente novamente!',
+            driverVersion: 'Versão do Driver',
+            cudaVersion: 'Versão do CUDA',
+            process: 'Informações do Processo',
+            type: 'Tipo',
+            typeG: 'Gráficos',
+            typeC: 'Cálculo',
+            typeCG: 'Cálculo + Gráficos',
+            processName: 'Nome do Processo',
+            processMemoryUsage: 'Uso de Memória',
+            temperatureHelper: 'Temperaturas altas da GPU podem causar limitação de frequência da GPU.',
+            performanceStateHelper: 'De P0 (máximo desempenho) a P12 (mínimo desempenho).',
+            busID: 'ID do Barramento',
+            persistenceMode: 'Modo de Persistência',
+            enabled: 'Ativado',
+            disabled: 'Desativado',
+            persistenceModeHelper:
+                'O modo de persistência permite respostas mais rápidas às tarefas, mas aumenta o consumo de energia em standby.',
+            displayActive: 'Placa Gráfica Inicializada',
+            displayActiveT: 'Sim',
+            displayActiveF: 'Não',
+            ecc: 'Tecnologia de Correção e Verificação de Erros',
+            computeMode: 'Modo de Cálculo',
+            default: 'Padrão',
+            exclusiveProcess: 'Processo Exclusivo',
+            exclusiveThread: 'Thread Exclusivo',
+            prohibited: 'Proibido',
+            defaultHelper: 'Padrão: Processos podem ser executados simultaneamente.',
+            exclusiveProcessHelper:
+                'Processo Exclusivo: Apenas um contexto CUDA pode usar a GPU, mas pode ser compartilhado por múltiplas threads.',
+            exclusiveThreadHelper: 'Thread Exclusivo: Apenas uma thread em um contexto CUDA pode usar a GPU.',
+            prohibitedHelper: 'Proibido: Não é permitido que processos sejam executados simultaneamente.',
+            migModeHelper: 'Usado para criar instâncias MIG para isolamento físico da GPU no nível do usuário.',
+            migModeNA: 'Não Suportado',
+        },
     },
     container: {
         create: 'Criar contêiner',
@@ -957,6 +1018,7 @@ const message = {
         errHandle: 'Falha na execução do Cronjob',
         noRecord: 'Acione a tarefa Cron e você verá os registros aqui.',
         cleanData: 'Limpar dados',
+        cleanRemoteData: 'Excluir dados remotos',
         cleanDataHelper: 'Excluir o arquivo de backup gerado durante esta tarefa.',
         noLogs: 'Ainda não há saída de tarefa...',
         errPath: 'Caminho de backup [{0}] com erro, não é possível fazer o download!',
@@ -1180,6 +1242,7 @@ const message = {
         resource: 'Recurso',
         operate: 'Operar',
         detail: {
+            ai: 'AI',
             groups: 'Grupo',
             hosts: 'Host',
             apps: 'Aplicativo',
@@ -1326,6 +1389,11 @@ const message = {
         minimap: 'Mini mapa de código',
         fileCanNotRead: 'O arquivo não pode ser lido',
         panelInstallDir: 'O diretório de instalação do 1Panel não pode ser excluído',
+        existFileTitle: 'Aviso de arquivo com o mesmo nome',
+        existFileHelper: 'O arquivo enviado contém um arquivo com o mesmo nome. Deseja substituí-lo?',
+        existFileSize: 'Tamanho do arquivo (novo -> antigo)',
+        existFileDirHelper: 'O arquivo/pasta selecionado tem um nome duplicado. Por favor, prossiga com cautela!',
+        noSuchFile: 'O arquivo ou diretório não foi encontrado. Por favor, verifique e tente novamente.',
     },
     ssh: {
         setting: 'configuração',
@@ -1432,8 +1500,10 @@ const message = {
         proxyDockerHelper:
             'Sincronize a configuração do servidor proxy com o Docker, suportando operações de puxar imagens de servidor offline e outras',
         apiInterface: 'Habilitar API',
-        apiInterfaceClose: 'Uma vez fechado, as interfaces da API não poderão ser acessadas. Deseja continuar?',
-        apiInterfaceHelper: 'Permitir que aplicativos de terceiros acessem a API.',
+        apiInterfaceClose:
+            'As interfaces de API estão indisponíveis, a funcionalidade do aplicativo será restrita. Deseja continuar?',
+        apiInterfaceHelper:
+            'Suporta acesso à interface de API do painel (essa funcionalidade precisa ser ativada no aplicativo do painel)',
         apiInterfaceAlert1:
             'Não habilite em ambientes de produção, pois pode aumentar os riscos de segurança do servidor.',
         apiInterfaceAlert2:
@@ -1451,10 +1521,9 @@ const message = {
         confDockerProxy: 'Configurar proxy do Docker',
         restartNowHelper: 'Configurar o proxy do Docker exige reiniciar o serviço Docker.',
         restartNow: 'Reiniciar imediatamente',
-        systemIPWarning:
-            'O endereço do servidor ainda não está configurado. Configure-o no painel de controle primeiro.',
+        systemIPWarning: 'O endereço do sistema não está definido no momento. Defina-o primeiro no painel de controle.',
         systemIPWarning1:
-            'O endereço atual do servidor está configurado como {0}, e o redirecionamento rápido não é possível!',
+            'O endereço do sistema atual está definido como {0}, e o redirecionamento rápido não é possível!',
         defaultNetwork: 'Placa de rede',
         syncTime: 'Hora do servidor',
         timeZone: 'Fuso horário',
@@ -1723,6 +1792,9 @@ const message = {
         community: 'Gratuito',
         pro: 'Pro',
         trial: 'Teste',
+        subscription: 'Assinatura',
+        perpetual: 'Licença Perpétua',
+        versionConstraint: '{0} Compra do versão',
         office: 'Oficial',
         trialInfo: 'Versão',
         authorizationId: 'ID de autorização de assinatura',
@@ -1751,16 +1823,16 @@ const message = {
         levelUpPro: 'Upgrade para Pro',
         licenseSync: 'Sincronização de Licença',
         knowMorePro: 'Saiba mais',
-        closeAlert: 'A página atual pode ser fechada nas configurações do painel',
+        closeAlert: 'A página atual pode ser oculta nas configurações do painel',
         introduce: 'Introdução de recursos',
         waf: 'O upgrade para a versão profissional pode fornecer recursos como mapa de intercepção, logs, registros de bloqueio, bloqueio por localização geográfica, regras personalizadas, páginas de intercepção personalizadas, etc.',
         tamper: 'O upgrade para a versão profissional pode proteger sites contra modificações ou adulterações não autorizadas.',
-        gpu: 'O upgrade para a versão profissional pode ajudar os usuários a monitorar visualmente parâmetros importantes da GPU, como carga de trabalho, temperatura e uso de memória em tempo real.',
         setting:
             'O upgrade para a versão profissional permite a personalização do logo do painel, mensagem de boas-vindas e outras informações.',
         monitor:
             'Upgrade para a versão profissional para visualizar o status em tempo real do site, tendências de visitantes, fontes de visitantes, logs de solicitações e outras informações.',
         alert: 'Upgrade para a versão profissional para receber informações de alarme via SMS e visualizar logs de alarmes, controlar completamente vários eventos chave e garantir a operação sem preocupações do sistema',
+        app: 'Atualize para a versão profissional para gerenciar servidores e visualizar recursos de monitoramento via o aplicativo móvel.',
     },
     clean: {
         scan: 'Iniciar escaneamento',
@@ -1933,6 +2005,9 @@ const message = {
             'O lado esquerdo é a versão antiga, o lado direito é a nova versão. Após editar, clique para salvar a versão personalizada',
         pullImage: 'Puxar Imagem',
         pullImageHelper: 'Execute o comando docker pull para puxar a imagem antes de iniciar o aplicativo',
+        gpuConfig: 'Aceleração de GPU',
+        gpuConfigHelper:
+            'Por favor, certifique-se de que o servidor tenha os drivers NVIDIA e o NVIDIA Container Toolkit instalados',
     },
     website: {
         website: 'Website | Websites',
@@ -1957,7 +2032,7 @@ const message = {
         app: 'Aplicativo',
         appNew: 'Novo Aplicativo',
         appInstalled: 'Aplicativo instalado',
-        create: 'Criar site',
+        create: 'Criar',
         delete: 'Excluir site',
         deleteApp: 'Excluir Aplicativo',
         deleteBackup: 'Excluir Backup',
@@ -2206,6 +2281,8 @@ const message = {
         sniHelper:
             'Quando o proxy reverso de backend for HTTPS, você pode precisar configurar o SNI de origem. Consulte a documentação do provedor de serviços CDN para mais detalhes.',
         huaweicloud: 'Huawei Cloud',
+        rainyun: 'Rain Yun',
+        westCN: 'West CN',
     },
     php: {
         short_open_tag: 'Suporte para short tags',
@@ -2541,6 +2618,40 @@ const message = {
         cronJobHelper: 'Dispara alerta via SMS ao falhar na execução de tarefas',
         licenseHelper: 'A versão profissional suporta alertas via SMS',
         alertCountHelper: 'Frequência máxima diária de alertas',
+        proxyHelper5:
+            'Após ativar, você pode desabilitar o acesso externo à porta na Loja de Aplicativos - Instalados - Ollama - Parâmetros para melhorar a segurança.',
+    },
+    aitool: {
+        proxy: 'Melhoria de Proxy AI',
+        proxyHelper1: 'Vincule o domínio e habilite o HTTPS para aumentar a segurança na transmissão',
+        proxyHelper2: 'Limite o acesso por IP para evitar exposição na internet pública',
+        proxyHelper3: 'Habilite a transmissão em fluxo',
+        proxyHelper4: 'Após a criação, você pode visualizar e gerenciar no lista de sites',
+        proxyHelper6: 'Para desativar a configuração de proxy, você pode excluí-la da lista de sites.',
+        whiteListHelper: 'Restringir o acesso apenas aos IPs na lista branca',
+    },
+    mcp: {
+        server: 'Servidor MCP',
+        create: 'Adicionar Servidor',
+        edit: 'Editar Servidor',
+        commandHelper: 'Por exemplo: npx -y {0}',
+        baseUrl: 'Caminho de Acesso Externo',
+        baseUrlHelper: 'Por exemplo: http://192.168.1.2:8000',
+        ssePath: 'Caminho SSE',
+        ssePathHelper: 'Por exemplo: /sse, tome cuidado para não duplicar com outros servidores',
+        environment: 'Variáveis de Ambiente',
+        envKey: 'Nome da Variável',
+        envValue: 'Valor da Variável',
+        externalUrl: 'Endereço de Conexão Externo',
+        operatorHelper: 'Será realizada a operação {1} no {0}, continuar?',
+        domain: 'Endereço de Acesso Padrão',
+        domainHelper: 'Por exemplo: 192.168.1.1 ou example.com',
+        bindDomain: 'Vincular Site',
+        commandPlaceHolder: 'Atualmente, apenas comandos de inicialização npx são suportados',
+        importMcpJson: 'Importar Configuração do Servidor MCP',
+        importMcpJsonError: 'A estrutura mcpServers está incorreta',
+        bindDomainHelper:
+            'Após vincular o site, ele modificará o endereço de acesso de todos os servidores MCP instalados e fechará o acesso externo às portas',
     },
 };
 

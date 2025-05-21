@@ -199,18 +199,19 @@ func (r *Remote) ChangeAccess(info AccessChangeInfo) error {
 		info.Name = "*"
 		info.Password = r.Password
 	}
-	if info.Permission != info.OldPermission {
-		if err := r.Delete(DeleteInfo{
-			Version:     info.Version,
-			Username:    info.Username,
-			Permission:  info.OldPermission,
-			ForceDelete: true,
-			Timeout:     300}); err != nil {
-			return err
-		}
-		if info.Username == "root" {
-			return nil
-		}
+	if info.Permission == info.OldPermission {
+		return nil
+	}
+	if err := r.Delete(DeleteInfo{
+		Version:     info.Version,
+		Username:    info.Username,
+		Permission:  info.OldPermission,
+		ForceDelete: true,
+		Timeout:     300}); err != nil {
+		return err
+	}
+	if info.Username == "root" {
+		return nil
 	}
 	if err := r.CreateUser(CreateInfo{
 		Name:       info.Name,
@@ -249,7 +250,7 @@ func (r *Remote) Backup(info BackupInfo) error {
 	if err != nil {
 		return err
 	}
-	backupCmd := fmt.Sprintf("docker run --rm --net=host -i %s /bin/bash -c '%s -h %s -P %d -u%s -p%s %s --default-character-set=%s %s'",
+	backupCmd := fmt.Sprintf("docker run --rm --net=host -i %s /bin/bash -c '%s --routines -h %s -P %d -u%s -p%s %s --default-character-set=%s %s'",
 		image, dumpCmd, r.Address, r.Port, r.User, r.Password, sslSkip(info.Version, r.Type), info.Format, info.Name)
 
 	global.LOG.Debug(strings.ReplaceAll(backupCmd, r.Password, "******"))

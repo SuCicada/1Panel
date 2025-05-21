@@ -72,6 +72,7 @@ const stopSignals = [
     'image pull successful!',
     'image push failed!',
     'image push successful!',
+    'ollama pull completed!',
 ];
 const emit = defineEmits(['update:loading', 'update:hasContent', 'update:isReading']);
 const tailLog = ref(false);
@@ -173,9 +174,11 @@ const getContent = async (pre: boolean) => {
     }
     if (res.data.lines && res.data.lines.length > 0) {
         res.data.lines = res.data.lines.map((line) =>
-            line.replace(/\\u(\w{4})/g, function (match, grp) {
-                return String.fromCharCode(parseInt(grp, 16));
-            }),
+            line
+                .replace(/\\u(\w{4})/g, function (match, grp) {
+                    return String.fromCharCode(parseInt(grp, 16));
+                })
+                .replace(/\x1B\[[0-?9;]*[mKhlGA]/g, ''),
         );
         const newLogs = res.data.lines;
         if (newLogs.length === readReq.pageSize && readReq.page < res.data.total) {

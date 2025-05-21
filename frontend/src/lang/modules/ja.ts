@@ -1,8 +1,8 @@
-import fit2cloudEnLocale from 'fit2cloud-ui-plus/src/locale/lang/ja';
-let xpackJpLocale = {};
+import fit2cloudJaLocale from 'fit2cloud-ui-plus/src/locale/lang/ja';
+let xpackJaLocale = {};
 const xpackModules = import.meta.glob('../../xpack/lang/ja.ts', { eager: true });
 if (xpackModules['../../xpack/lang/ja.ts']) {
-    xpackJpLocale = xpackModules['../../xpack/lang/ja.ts']['default'] || {};
+    xpackJaLocale = xpackModules['../../xpack/lang/ja.ts']['default'] || {};
 }
 
 const message = {
@@ -14,6 +14,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: '実行',
             create: '作成する',
             add: '追加',
             save: '保存',
@@ -52,15 +53,15 @@ const message = {
             saveAndEnable: '保存して有効にします',
             import: '輸入',
             search: '検索',
-            refresh: 'リフレッシュします',
+            refresh: 'リロード',
             get: '得る',
             upgrade: 'アップグレード',
-            ignore: 'アップグレードを無視します',
+            ignore: '更新を無視する',
             copy: 'コピー',
             random: 'ランダム',
             uninstall: 'アンインストール',
-            fullscreen: 'フルスクリーンを入力します',
-            quitFullscreen: 'フルスクリーンを終了します',
+            fullscreen: 'フルスクリーン',
+            quitFullscreen: 'フルスクリーンを終了',
             update: '編集',
             showAll: 'すべてを表示します',
             hideSome: 'いくつかを隠します',
@@ -73,6 +74,8 @@ const message = {
             createNewFile: '新しいファイルを作成します',
             helpDoc: '文書をヘルプします',
             unbind: 'バインド',
+            cover: 'に覆いを',
+            skip: 'スキップ',
         },
         search: {
             timeStart: '時間開始',
@@ -107,8 +110,9 @@ const message = {
             protocol: 'プロトコル',
             tableSetting: 'テーブル設定',
             refreshRate: 'リフレッシュレート',
-            refreshRateUnit: '更新なし|{n}秒/時間 |{n}秒/時間',
+            refreshRateUnit: '更新なし|{n}秒/時 |{n}秒/時',
             selectColumn: '列を選択します',
+            serialNumber: 'シリアル番号',
         },
         loadingText: {
             Upgrading: 'システムのアップグレード、待ってください...',
@@ -186,6 +190,7 @@ const message = {
             rePassword: 'パスワードがパスワードと矛盾することを確認してください。',
             requiredInput: 'この項目は必須です。',
             requiredSelect: 'リスト内のアイテムを選択します',
+            illegalChar: '現在、文字 & ; $ \' ` ( ) " > < | の注入はサポートされていません',
             illegalInput: `このフィールドには違法なキャラクターが含まれてはなりません。`,
             commonName:
                 'このフィールドは、特別なキャラクターではなく、英語、中国語、数字で構成されている必要があります。「。」、「」、および「_」文字が1〜128の文字で構成されている必要があります。',
@@ -221,8 +226,9 @@ const message = {
             paramComplexity: `このフィールドは、特殊文字で開始および終了する必要はなく、英語、数字「{0}」文字で構成されている必要があります。`,
             paramUrlAndPort:
                 'このフィールドは、「http（s）://（domain name/ip）:(ポート）」の形式でなければなりません。',
-            nginxDoc: 'このフィールドは、英語、数字、「」で構成されている必要があります。文字。',
-            appName: `このフィールドは、「 - 」と「_」文字で開始および終了してはなりません。英語、数字、 "、および「_」文字で2〜30の文字で構成されている必要があります。`,
+            nginxDoc: 'このフィールドは、英語、数字、_、「」で構成されている必要があります。文字。',
+            appName:
+                '小文字の英字、数字、-および_をサポートし、長さは2〜30で、-または_で始まったり終わったりすることはできません',
             containerName: '文字、数字、 - 、_および。;-  _または。で始めることはできません。長さ:2-128',
             mirror: 'ミラーアクセラレーションアドレスは、http（s）://、英語の文字（大文字と小文字の両方）、数字をサポートする必要があります。/および - 、そして空白の行を含めてはなりません。',
             disableFunction: 'サポートレター、アンダースコア、および',
@@ -290,7 +296,7 @@ const message = {
         units: {
             second: '2番目|2番目|秒',
             minute: '分|分|分',
-            hour: '時間|時間|時間',
+            hour: '時|時|時',
             day: '日|日|日',
             week: '週|週|週',
             month: '月|月|数ヶ月',
@@ -326,6 +332,7 @@ const message = {
         firewall: 'ファイアウォール',
         ssl: '証明書|証明書',
         database: 'データベース|データベース',
+        ai_tools: 'AI',
         container: 'コンテナ|コンテナ',
         cronjob: 'クロンジョブ|クロンの仕事',
         host: 'ホスト|ホスト',
@@ -421,6 +428,8 @@ const message = {
         permission: '権限',
         permissionForIP: 'ip',
         permissionAll: 'それらすべて（％）',
+        localhostHelper:
+            'コンテナ展開でデータベース権限を"localhost"に設定すると、コンテナ外部からのアクセスができなくなります。慎重に選択してください！',
         databaseConnInfo: '接続情報',
         rootPassword: 'ルートパスワード',
         serviceName: 'サービス名',
@@ -432,6 +441,7 @@ const message = {
         remoteConnHelper:
             'ユーザールートとしてのMySQLへのリモート接続には、セキュリティリスクがある場合があります。したがって、この操作を慎重に実行します。',
         changePassword: 'パスワード',
+        changeConnHelper: 'この操作は現在のデータベース {0} を変更します。続行しますか？',
         changePasswordHelper:
             'データベースはアプリケーションに関連付けられています。パスワードを変更すると、アプリケーションのデータベースパスワードが同時に変更されます。アプリケーションが再起動した後、変更は有効になります。',
 
@@ -587,6 +597,56 @@ const message = {
         remoteConnHelper2:
             'この接続アドレスは、非コンテナまたは外部アプリケーションで実行されているアプリケーションで使用できます。',
         localIP: 'ローカルIP',
+    },
+    ai_tools: {
+        model: {
+            model: 'モデル',
+            create: 'モデルを追加',
+            create_helper: 'を取得 "{0}"',
+            ollama_doc: 'Ollama の公式ウェブサイトを訪れて、さらに多くのモデルを検索して見つけることができます。',
+            container_conn_helper: 'コンテナ間のアクセスまたは接続にこのアドレスを使用',
+            ollama_sync: 'Ollamaモデルの同期中に、以下のモデルが存在しないことが判明しました。削除しますか？',
+            from_remote: 'このモデルは1Panelを介してダウンロードされておらず、関連するプルログはありません。',
+            no_logs: 'このモデルのプルログは削除されており、関連するログを表示できません。',
+        },
+        gpu: {
+            gpu: 'GPUモニター',
+            base: '基本情報',
+            gpuHelper:
+                '現在のシステムでNVIDIA-SMIまたはXPU-SMIコマンドが検出されませんでした。確認して再試行してください！',
+            driverVersion: 'ドライバーバージョン',
+            cudaVersion: 'CUDAバージョン',
+            process: 'プロセス情報',
+            type: 'タイプ',
+            typeG: 'グラフィックス',
+            typeC: 'コンピュート',
+            typeCG: 'コンピュート + グラフィックス',
+            processName: 'プロセス名',
+            processMemoryUsage: 'メモリ使用量',
+            temperatureHelper: '高いGPU温度はGPUの周波数制限を引き起こす可能性があります',
+            performanceStateHelper: 'P0（最大性能）からP12（最小性能）まで',
+            busID: 'バスID',
+            persistenceMode: '永続モード',
+            enabled: '有効',
+            disabled: '無効',
+            persistenceModeHelper: '永続モードはタスクの応答速度を速くしますが、待機時の消費電力が増加します。',
+            displayActive: 'グラフィックカード初期化済み',
+            displayActiveT: 'はい',
+            displayActiveF: 'いいえ',
+            ecc: 'エラー訂正およびチェック技術',
+            computeMode: 'コンピュートモード',
+            default: 'デフォルト',
+            exclusiveProcess: '専用プロセス',
+            exclusiveThread: '専用スレッド',
+            prohibited: '禁止',
+            defaultHelper: 'デフォルト：プロセスは並行して実行できます',
+            exclusiveProcessHelper:
+                '専用プロセス：1つのCUDAコンテキストのみがGPUを使用できますが、複数のスレッドで共有できます',
+            exclusiveThreadHelper: '専用スレッド：CUDAコンテキスト内の1つのスレッドのみがGPUを使用できます',
+            prohibitedHelper: '禁止：プロセスは同時に実行できません',
+            migModeHelper: 'ユーザーレベルでGPUの物理的分離を行うためのMIGインスタンスを作成するために使用されます。',
+            migModeNA: 'サポートされていません',
+        },
     },
     container: {
         create: 'コンテナを作成します',
@@ -938,6 +998,7 @@ const message = {
         errHandle: 'cronjob実行障害',
         noRecord: 'Cronジョブをトリガーすると、ここにレコードが表示されます。',
         cleanData: 'クリーンデータ',
+        cleanRemoteData: 'リモートデータを削除',
         cleanDataHelper: 'このタスク中に生成されたバックアップファイルを削除します。',
         noLogs: 'タスク出力はまだありません...',
         errPath: 'バックアップパス[{0}]エラー、ダウンロードできません！',
@@ -1154,6 +1215,7 @@ const message = {
         resource: 'リソース',
         operate: '動作します',
         detail: {
+            ai: 'AI',
             groups: 'グループ',
             hosts: 'ホスト',
             apps: 'アプリ',
@@ -1184,7 +1246,7 @@ const message = {
         editPermissions: '編集@:file.mode',
         owner: '所有者',
         file: 'ファイル',
-        remoteFile: 'リモコンからダウンロードしてください',
+        remoteFile: 'リモートダウンロード',
         share: '共有',
         sync: 'データ同期',
         size: 'サイズ',
@@ -1283,9 +1345,9 @@ const message = {
         clashOpenAlert: '「リサイクルビン」ボタンをクリックして、リサイクルビンディレクトリを開きます',
         right: 'フォワード',
         back: '戻る',
-        top: '戻って行きます',
-        refresh: 'リフレッシュします',
-        up: '戻って行きます',
+        top: '戻る',
+        refresh: 'リロード',
+        up: '戻る',
         openWithVscode: 'VSコードで開く',
         vscodeHelper:
             'VSコードがローカルにインストールされ、SSHリモートプラグインが構成されていることを確認してください',
@@ -1297,6 +1359,11 @@ const message = {
         minimap: 'コードミニマップ',
         fileCanNotRead: 'ファイルは読み取れません',
         panelInstallDir: `1Panelインストールディレクトリは削除できません`,
+        existFileTitle: '同名ファイルの警告',
+        existFileHelper: 'アップロードしたファイルに同じ名前のファイルが含まれています。上書きしますか？',
+        existFileSize: 'ファイルサイズ（新しい -> 古い）',
+        existFileDirHelper: '選択したファイル/フォルダーには同じ名前のものが既に存在します。慎重に操作してください！',
+        noSuchFile: 'ファイルまたはディレクトリが見つかりませんでした。確認して再試行してください。',
     },
     ssh: {
         setting: '設定',
@@ -1403,8 +1470,9 @@ const message = {
         proxyDockerHelper:
             'プロキシサーバーの構成をDockerに同期し、オフラインサーバーイメージの引っ張りやその他の操作をサポートします',
         apiInterface: 'APIを有効にします',
-        apiInterfaceClose: '閉じたら、APIインターフェイスにアクセスできません。続けたいですか？',
-        apiInterfaceHelper: 'サードパーティのアプリケーションにAPIにアクセスできるようにします。',
+        apiInterfaceClose: 'APIインターフェースが利用できません。アプリ機能が制限されます。続行しますか？',
+        apiInterfaceHelper:
+            'パネルAPIインターフェースアクセスをサポート（この機能はパネルアプリで有効にする必要があります）',
         apiInterfaceAlert1: `サーバーのセキュリティリスクが増加する可能性があるため、生産環境で有効にしないでください。`,
         apiInterfaceAlert2: `サードパーティのアプリケーションを使用してAPIを呼び出して、潜在的なセキュリティの脅威を防止しないでください。`,
         apiInterfaceAlert3: 'APIドキュメント',
@@ -1419,8 +1487,8 @@ const message = {
         confDockerProxy: 'Dockerプロキシを構成します',
         restartNowHelper: 'Dockerプロキシの構成には、Dockerサービスを再起動する必要があります。',
         restartNow: 'すぐに再起動します',
-        systemIPWarning: `サーバーアドレスは現在設定されていません。最初にコントロールパネルに設定します。`,
-        systemIPWarning1: `現在のサーバーアドレスは{0}に設定されており、クイックリダイレクトは不可能です！`,
+        systemIPWarning: `システムアドレスが現在設定されていません。まずコントロールパネルで設定してください。`,
+        systemIPWarning1: `現在のシステムアドレスは {0} に設定されており、クイックリダイレクトはできません！`,
         defaultNetwork: 'ネットワークカード',
         syncTime: 'サーバー時間',
         timeZone: 'タイムゾーン',
@@ -1680,7 +1748,10 @@ const message = {
         community: '無料',
         oss: '無料',
         pro: '専門',
-        trial: 'トライアル',
+        trial: '体験',
+        subscription: 'サブスクリプション',
+        perpetual: '永久ライセンス',
+        versionConstraint: '{0} バージョン買い取り',
         office: '正式',
         trialInfo: 'バージョン',
         authorizationId: 'サブスクリプション承認ID',
@@ -1708,16 +1779,16 @@ const message = {
         levelUpPro: 'Proにアップグレードします',
         licenseSync: 'ライセンス同期',
         knowMorePro: 'もっと詳しく知る',
-        closeAlert: '現在のページはパネル設定で閉じることができます',
+        closeAlert: '現在のページはパネル設定で非表示にできます',
         introduce: '機能の紹介',
         waf: 'プロフェッショナルバージョンにアップグレードすると、インターセプトマップ、ログ、ブロックレコード、地理的位置ブロッキング、カスタムルール、カスタムインターセプトページなどの機能を提供できます。',
         tamper: 'プロのバージョンにアップグレードすると、不正な変更や改ざんからWebサイトを保護できます。',
-        gpu: 'プロのバージョンにアップグレードすることで、ユーザーはワークロード、温度、メモリ使用量などのGPUの重要なパラメーターをリアルタイムで視覚的に監視するのに役立ちます。',
         setting:
             'プロのバージョンにアップグレードすることで、パネルロゴ、ウェルカムメッセージ、その他の情報のカスタマイズが可能になります。',
         monitor:
             'プロのバージョンにアップグレードして、Webサイトのリアルタイムステータス、訪問者の傾向、訪問者ソース、リクエストログ、その他の情報を表示します。',
-        alert: 'プロのバージョンにアップグレードして、SMSを介してアラーム情報を受信し、アラームログを表示し、さまざまなキーイベントを完全に制御し、心配のないシステム操作を確実にする',
+        alert: 'プロのバージョンにアップグレードして、SMSを介してアラーム情報を受信し、アラームログを表示し、さまざまなキーイベントを完全に制御し、心配のないシステム操作を確実にする。',
+        app: 'プロ版にアップグレードすると、モバイルアプリを使ってサーバーを管理し、監視機能を確認できます。',
     },
     clean: {
         scan: 'スキャンを開始します',
@@ -1828,7 +1899,7 @@ const message = {
         noService: 'いいえ{0}',
         toInstall: 'インストールに移動します',
         param: 'パラメーター',
-        alreadyRun: '年',
+        alreadyRun: 'インストール済み',
         syncAppList: '同期',
         less1Minute: '1分未満',
         appOfficeWebsite: 'オフィスのウェブサイト',
@@ -1859,7 +1930,7 @@ const message = {
         upgradeHelper:
             'アップグレードする前に、異常なアプリケーションを通常のステータスに戻します。アップグレードが失敗した場合は、「ログ>システムログ」に移動して、障害の理由を確認します。',
         installWarn: `外部アクセスは有効になっていないため、アプリケーションが外部ネットワークを介してアクセスできるようになります。続けたいですか？`,
-        showIgnore: '無視されたアプリケーションを表示します',
+        showIgnore: '無視したアプリ一覧',
         cancelIgnore: 'キャンセルは無視します',
         ignoreList: '無視されたアプリケーション',
         appHelper:
@@ -1890,6 +1961,9 @@ const message = {
             '左側は古いバージョンで、右側は新しいバージョンです。編集後、クリックしてカスタムバージョンを保存します',
         pullImage: '画像を引っ張ります',
         pullImageHelper: 'アプリケーションが開始する前に、Docker Pullを実行して画像をプルします',
+        gpuConfig: 'GPU アクセラレーション',
+        gpuConfigHelper:
+            'サーバーにNVIDIAドライバーとNVIDIA Container Toolkitがインストールされていることを確認してください',
     },
     website: {
         website: 'ウェブサイト|ウェブサイト',
@@ -1914,7 +1988,7 @@ const message = {
         app: '応用',
         appNew: '新しいアプリケーション',
         appInstalled: 'インストールされたアプリケーション',
-        create: 'Webサイトを作成します',
+        create: '作成する',
         delete: 'Webサイトを削除します',
         deleteApp: 'アプリケーションを削除します',
         deleteBackup: 'バックアップを削除します',
@@ -2160,6 +2234,8 @@ const message = {
         sniHelper:
             '逆プロキシバックエンドがHTTPSの場合、Origin SNIを設定する必要がある場合があります。詳細については、CDNサービスプロバイダーのドキュメントを参照してください。',
         huaweicloud: 'huaweiCloud',
+        rainyun: 'Rain Yun',
+        westCN: 'West CN',
     },
     php: {
         short_open_tag: '短いタグサポート',
@@ -2487,9 +2563,43 @@ const message = {
         licenseHelper: 'プロのバージョンはSMSアラートをサポートします',
         alertCountHelper: '最大毎日のアラーム周波数',
     },
+    aitool: {
+        proxy: 'AI プロキシ強化',
+        proxyHelper1: 'ドメインをバインドし、HTTPS を有効にして通信のセキュリティを強化',
+        proxyHelper2: 'IP アクセスを制限し、パブリックインターネットでの露出を防止',
+        proxyHelper3: 'ストリーミングを有効にする',
+        proxyHelper4: '作成後、ウェブサイトリストで確認および管理できます',
+        proxyHelper5:
+            '有効にすると、アプリストア - インストール済み - Ollama - パラメータでポートの外部アクセスを無効にし、セキュリティを向上させることができます。',
+        proxyHelper6: 'プロキシ設定を無効にするには、ウェブサイトリストから削除できます。',
+        whiteListHelper: 'ホワイトリスト内のIPのみアクセスを許可する',
+    },
+    mcp: {
+        server: 'MCP サーバー',
+        create: 'サーバーを追加',
+        edit: 'サーバーを編集',
+        commandHelper: '例: npx -y {0}',
+        baseUrl: '外部アクセスパス',
+        baseUrlHelper: '例: http://192.168.1.2:8000',
+        ssePath: 'SSE パス',
+        ssePathHelper: '例: /sse, 他のサーバーと重複しないように注意してください',
+        environment: '環境変数',
+        envKey: '変数名',
+        envValue: '変数値',
+        externalUrl: '外部接続アドレス',
+        operatorHelper: '{0} に {1} 操作を実行します、続行しますか？',
+        domain: 'デフォルトアクセスアドレス',
+        domainHelper: '例: 192.168.1.1 または example.com',
+        bindDomain: 'ウェブサイトをバインド',
+        commandPlaceHolder: '現在、npx スタートアップコマンドのみをサポートしています',
+        importMcpJson: 'MCP サーバー設定をインポート',
+        importMcpJsonError: 'mcpServers 構造が正しくありません',
+        bindDomainHelper:
+            'ウェブサイトをバインドした後、インストールされたすべての MCP サーバーのアクセスアドレスを変更し、ポートへの外部アクセスを閉じます',
+    },
 };
 export default {
-    ...fit2cloudEnLocale,
+    ...fit2cloudJaLocale,
     ...message,
-    ...xpackJpLocale,
+    ...xpackJaLocale,
 };

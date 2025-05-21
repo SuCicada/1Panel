@@ -1,4 +1,4 @@
-<p align="center"><a href="https://1panel.hk"><img src="https://resource.1panel.hk/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
+<p align="center"><a href="https://1panel.pro"><img src="https://resource.1panel.pro/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
 <p align="center"><b>評分最高的基於網頁的 Linux 伺服器管理工具</b></p>
 <p align="center">
   <a href="https://trendshift.io/repositories/2462" target="_blank"><img src="https://trendshift.io/api/badge/repositories/2462" alt="1Panel-dev%2F1Panel | Trendshift" style="width: 180px; height: auto;" /></a>
@@ -45,12 +45,12 @@
 執行如下命令一鍵安裝 1Panel:
 
 ```sh
-curl -sSL https://resource.1panel.hk/quick_start.sh -o quick_start.sh && bash quick_start.sh
+curl -sSL https://resource.1panel.pro/quick_start.sh -o quick_start.sh && bash quick_start.sh
 ```
 
 ## UI 展示
 
-![UI展示](https://resource.1panel.hk/img/1panel.png)
+![UI展示](https://resource.1panel.pro/img/1panel.png)
 
 ## Star History
 

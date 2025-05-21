@@ -38,16 +38,11 @@ func (u *AuthService) Login(c *gin.Context, info dto.Login, entrance string) (*d
 	if err != nil {
 		return nil, errors.WithMessage(constant.ErrRecordNotFound, err.Error())
 	}
-	passwordSetting, err := settingRepo.Get(settingRepo.WithByKey("Password"))
-	if err != nil {
-		return nil, errors.WithMessage(constant.ErrRecordNotFound, err.Error())
-	}
-	pass, err := encrypt.StringDecrypt(passwordSetting.Value)
-	if err != nil {
+	if nameSetting.Value != info.Name {
 		return nil, constant.ErrAuth
 	}
-	if !hmac.Equal([]byte(info.Password), []byte(pass)) || nameSetting.Value != info.Name {
-		return nil, constant.ErrAuth
+	if err = checkPassword(info.Password); err != nil {
+		return nil, err
 	}
 	entranceSetting, err := settingRepo.Get(settingRepo.WithByKey("SecurityEntrance"))
 	if err != nil {
@@ -83,16 +78,11 @@ func (u *AuthService) MFALogin(c *gin.Context, info dto.MFALogin, entrance strin
 	if err != nil {
 		return nil, errors.WithMessage(constant.ErrRecordNotFound, err.Error())
 	}
-	passwordSetting, err := settingRepo.Get(settingRepo.WithByKey("Password"))
-	if err != nil {
-		return nil, errors.WithMessage(constant.ErrRecordNotFound, err.Error())
-	}
-	pass, err := encrypt.StringDecrypt(passwordSetting.Value)
-	if err != nil {
-		return nil, err
-	}
-	if !hmac.Equal([]byte(info.Password), []byte(pass)) || nameSetting.Value != info.Name {
+	if nameSetting.Value != info.Name {
 		return nil, constant.ErrAuth
+	}
+	if err = checkPassword(info.Password); err != nil {
+		return nil, err
 	}
 	entranceSetting, err := settingRepo.Get(settingRepo.WithByKey("SecurityEntrance"))
 	if err != nil {
@@ -214,8 +204,30 @@ func (u *AuthService) GetSecurityEntrance() string {
 func (u *AuthService) IsLogin(c *gin.Context) bool {
 	sID, _ := c.Cookie(constant.SessionName)
 	_, err := global.SESSION.Get(sID)
+	return err == nil
+}
+
+func checkPassword(password string) error {
+	priKey, _ := settingRepo.Get(settingRepo.WithByKey("PASSWORD_PRIVATE_KEY"))
+
+	privateKey, err := encrypt.ParseRSAPrivateKey(priKey.Value)
 	if err != nil {
-		return false
+		return err
 	}
-	return true
+	loginPassword, err := encrypt.DecryptPassword(password, privateKey)
+	if err != nil {
+		return err
+	}
+	passwordSetting, err := settingRepo.Get(settingRepo.WithByKey("Password"))
+	if err != nil {
+		return errors.WithMessage(constant.ErrRecordNotFound, err.Error())
+	}
+	existPassword, err := encrypt.StringDecrypt(passwordSetting.Value)
+	if err != nil {
+		return err
+	}
+	if !hmac.Equal([]byte(loginPassword), []byte(existPassword)) {
+		return constant.ErrAuth
+	}
+	return nil
 }

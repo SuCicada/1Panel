@@ -3,10 +3,13 @@ package ssl
 import (
 	"crypto"
 	"encoding/json"
-	"github.com/go-acme/lego/v4/providers/dns/rainyun"
+	"github.com/go-acme/lego/v4/providers/dns/westcn"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/go-acme/lego/v4/providers/dns/freemyip"
+	"github.com/go-acme/lego/v4/providers/dns/rainyun"
 
 	"github.com/1Panel-dev/1Panel/backend/app/model"
 	"github.com/go-acme/lego/v4/acme"
@@ -18,6 +21,7 @@ import (
 	"github.com/go-acme/lego/v4/providers/dns/alidns"
 	"github.com/go-acme/lego/v4/providers/dns/clouddns"
 	"github.com/go-acme/lego/v4/providers/dns/cloudflare"
+	"github.com/go-acme/lego/v4/providers/dns/cloudns"
 	"github.com/go-acme/lego/v4/providers/dns/dnspod"
 	"github.com/go-acme/lego/v4/providers/dns/godaddy"
 	"github.com/go-acme/lego/v4/providers/dns/huaweicloud"
@@ -73,6 +77,8 @@ const (
 	Volcengine   DnsType = "Volcengine"
 	CloudFlare   DnsType = "CloudFlare"
 	CloudDns     DnsType = "CloudDns"
+	ClouDNS      DnsType = "ClouDNS"
+	FreeMyIP     DnsType = "FreeMyIP"
 	NameSilo     DnsType = "NameSilo"
 	NameCheap    DnsType = "NameCheap"
 	NameCom      DnsType = "NameCom"
@@ -80,21 +86,26 @@ const (
 	TencentCloud DnsType = "TencentCloud"
 	HuaweiCloud  DnsType = "HuaweiCloud"
 	RainYun      DnsType = "RainYun"
+	WestCN       DnsType = "WestCN"
 )
 
 type DNSParam struct {
-	ID        string `json:"id"`
-	Token     string `json:"token"`
-	AccessKey string `json:"accessKey"`
-	SecretKey string `json:"secretKey"`
-	Email     string `json:"email"`
-	APIkey    string `json:"apiKey"`
-	APIUser   string `json:"apiUser"`
-	APISecret string `json:"apiSecret"`
-	SecretID  string `json:"secretID"`
-	Region    string `json:"region"`
-	ClientID  string `json:"clientID"`
-	Password  string `json:"password"`
+	ID           string `json:"id"`
+	Token        string `json:"token"`
+	AccessKey    string `json:"accessKey"`
+	SecretKey    string `json:"secretKey"`
+	Email        string `json:"email"`
+	APIkey       string `json:"apiKey"`
+	APIUser      string `json:"apiUser"`
+	APISecret    string `json:"apiSecret"`
+	SecretID     string `json:"secretID"`
+	Region       string `json:"region"`
+	ClientID     string `json:"clientID"`
+	Password     string `json:"password"`
+	AuthID       string `json:"authID"`
+	SubAuthID    string `json:"subAuthID"`
+	AuthPassword string `json:"authPassword"`
+	Username     string `json:"username"`
 }
 
 var (
@@ -155,6 +166,21 @@ func (c *AcmeClient) UseDns(dnsType DnsType, params string, websiteSSL model.Web
 		clouddnsConfig.PollingInterval = pollingInterval
 		clouddnsConfig.TTL = ttl
 		p, err = clouddns.NewDNSProviderConfig(clouddnsConfig)
+	case ClouDNS:
+		cloudnsConfig := cloudns.NewDefaultConfig()
+		cloudnsConfig.AuthID = param.AuthID
+		cloudnsConfig.SubAuthID = param.SubAuthID
+		cloudnsConfig.AuthPassword = param.AuthPassword
+		cloudnsConfig.PropagationTimeout = propagationTimeout
+		cloudnsConfig.PollingInterval = pollingInterval
+		cloudnsConfig.TTL = ttl
+		p, err = cloudns.NewDNSProviderConfig(cloudnsConfig)
+	case FreeMyIP:
+		freeMyIpConfig := freemyip.NewDefaultConfig()
+		freeMyIpConfig.Token = param.Token
+		freeMyIpConfig.PropagationTimeout = propagationTimeout
+		freeMyIpConfig.PollingInterval = pollingInterval
+		p, err = freemyip.NewDNSProviderConfig(freeMyIpConfig)
 	case NameCheap:
 		namecheapConfig := namecheap.NewDefaultConfig()
 		namecheapConfig.APIKey = param.APIkey
@@ -210,6 +236,14 @@ func (c *AcmeClient) UseDns(dnsType DnsType, params string, websiteSSL model.Web
 		rainyunConfig.PollingInterval = pollingInterval
 		rainyunConfig.TTL = ttl
 		p, err = rainyun.NewDNSProviderConfig(rainyunConfig)
+	case WestCN:
+		westcnConfig := westcn.NewDefaultConfig()
+		westcnConfig.Username = param.Username
+		westcnConfig.Password = param.Password
+		westcnConfig.PropagationTimeout = propagationTimeout
+		westcnConfig.PollingInterval = pollingInterval
+		westcnConfig.TTL = ttl
+		p, err = westcn.NewDNSProviderConfig(westcnConfig)
 	}
 	if err != nil {
 		return err

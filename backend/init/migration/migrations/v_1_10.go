@@ -360,3 +360,112 @@ var AddApiKeyValidityTime = &gormigrate.Migration{
 		return nil
 	},
 }
+
+var UpdateAppTag = &gormigrate.Migration{
+	ID: "20250114-update-app-tag",
+	Migrate: func(tx *gorm.DB) error {
+		if err := tx.AutoMigrate(&model.Tag{}); err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
+var UpdateApp = &gormigrate.Migration{
+	ID: "20250213-update-app",
+	Migrate: func(tx *gorm.DB) error {
+		if err := tx.AutoMigrate(&model.App{}); err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
+var AddOllamaModel = &gormigrate.Migration{
+	ID: "20250218-add-ollama-model",
+	Migrate: func(tx *gorm.DB) error {
+		if err := tx.AutoMigrate(&model.OllamaModel{}); err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
+var AddAppMenu = &gormigrate.Migration{
+	ID: "20250217-update-xpack-hide-menu",
+	Migrate: func(tx *gorm.DB) error {
+		var (
+			setting model.Setting
+			menu    dto.XpackHideMenu
+		)
+
+		tx.Model(&model.Setting{}).Where("key = ?", "XpackHideMenu").First(&setting)
+
+		if err := json.Unmarshal([]byte(setting.Value), &menu); err != nil {
+			return err
+		}
+
+		var newChildren []dto.XpackHideMenu
+		for _, item := range menu.Children {
+			if item.ID != "4" {
+				newChildren = append(newChildren, item)
+			}
+		}
+		menu.Children = newChildren
+
+		appIsCheck := false
+		for _, item := range menu.Children {
+			if item.IsCheck {
+				appIsCheck = true
+				break
+			}
+		}
+
+		menu.Children = append(menu.Children, dto.XpackHideMenu{
+			ID:      "8",
+			Title:   "xpack.app.app",
+			Path:    "/xpack/app",
+			Label:   "XApp",
+			IsCheck: appIsCheck,
+		})
+
+		data, err := json.Marshal(menu)
+		if err != nil {
+			return err
+		}
+
+		return tx.Model(&model.Setting{}).Where("key = ?", "XpackHideMenu").Updates(map[string]interface{}{"value": string(data)}).Error
+	},
+}
+
+var AddAppPanelName = &gormigrate.Migration{
+	ID: "20250218-add-app-panel-name",
+	Migrate: func(tx *gorm.DB) error {
+
+		if err := tx.Create(&model.Setting{Key: "AppPanelName", Value: ""}).Error; err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
+var AddLicenseVerify = &gormigrate.Migration{
+	ID: "20250226-add-license-verify",
+	Migrate: func(tx *gorm.DB) error {
+
+		if err := tx.Create(&model.Setting{Key: "LicenseVerify", Value: "LX"}).Error; err != nil {
+			return err
+		}
+		return nil
+	},
+}
+
+var AddMcpServer = &gormigrate.Migration{
+	ID: "20250401-add-mcp-server",
+	Migrate: func(tx *gorm.DB) error {
+		if err := tx.AutoMigrate(&model.McpServer{}); err != nil {
+			return err
+		}
+		return nil
+	},
+}

@@ -2,8 +2,8 @@ system:
   db_file: 1Panel.db
   base_dir: /opt
   mode: dev
-  repo_url: https://resource.1panel.hk
-  app_repo: https://apps.1panel.hk
+  repo_url: https://resource.1panel.pro
+  app_repo: https://apps.1panel.pro
   is_demo: false
   is_intl: true
   port: 9999

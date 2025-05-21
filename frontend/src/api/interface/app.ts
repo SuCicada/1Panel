@@ -8,11 +8,13 @@ export namespace App {
         tags: Tag[];
         shortDescZh: string;
         shortDescEn: string;
+        description: string;
         author: string;
         source: string;
         type: string;
         status: string;
         limit: number;
+        gpuSupport: boolean;
     }
 
     export interface AppDTO extends App {
@@ -45,6 +47,7 @@ export namespace App {
         dockerCompose: string;
         image: string;
         hostMode?: boolean;
+        gpuSupport: boolean;
     }
 
     export interface AppReq extends ReqPage {
@@ -58,10 +61,21 @@ export namespace App {
         formFields: FromField[];
     }
 
+    interface Locale {
+        zh: string;
+        en: string;
+        'zh-Hant': string;
+        ja: string;
+        ms: string;
+        'pt-br': string;
+        ru: string;
+    }
+
     export interface FromField {
         type: string;
         labelZh: string;
         labelEn: string;
+        label: Locale;
         required: boolean;
         default: any;
         envKey: string;
@@ -228,6 +242,7 @@ export namespace App {
         allowPort: boolean;
         dockerCompose: string;
         hostMode?: boolean;
+        gpuConfig?: boolean;
     }
 
     export interface IgnoredApp {

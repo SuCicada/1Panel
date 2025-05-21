@@ -1,9 +1,9 @@
-import fit2cloudEnLocale from 'fit2cloud-ui-plus/src/locale/lang/ms';
+import fit2cloudMsLocale from 'fit2cloud-ui-plus/src/locale/lang/ms';
 
-let xpackEnLocale = {};
+let xpackMsLocale = {};
 const xpackModules = import.meta.glob('../../xpack/lang/ms.ts', { eager: true });
 if (xpackModules['../../xpack/lang/ms.ts']) {
-    xpackEnLocale = xpackModules['../../xpack/lang/ms.ts']['default'] || {};
+    xpackMsLocale = xpackModules['../../xpack/lang/ms.ts']['default'] || {};
 }
 
 const message = {
@@ -15,6 +15,7 @@ const message = {
         fit2cloud: 'FIT2CLOUD',
         lingxia: 'Lingxia',
         button: {
+            run: 'Jalankan',
             create: 'Cipta',
             add: 'Tambah',
             save: 'Simpan',
@@ -60,8 +61,8 @@ const message = {
             copy: 'Salin',
             random: 'Rawak',
             uninstall: 'Nyahpasang',
-            fullscreen: 'Masuk ke skrin penuh',
-            quitFullscreen: 'Keluar dari skrin penuh',
+            fullscreen: 'Skrin Penuh',
+            quitFullscreen: 'Keluar Skrin Penuh',
             update: 'Kemas kini',
             showAll: 'Tunjukkan Semua',
             hideSome: 'Sembunyikan Sebahagian',
@@ -74,6 +75,8 @@ const message = {
             createNewFile: 'Cipta fail baru',
             helpDoc: 'Dokumen Bantuan',
             unbind: 'Nyahkaitkan',
+            cover: 'Tindih',
+            skip: 'Langkau',
         },
         search: {
             timeStart: 'Masa mula',
@@ -110,6 +113,7 @@ const message = {
             refreshRate: 'Kadar penyegaran',
             refreshRateUnit: 'Tiada penyegaran | {n} saat/masa | {n} saat/masa',
             selectColumn: 'Pilih lajur',
+            serialNumber: 'Nombor siri',
         },
         loadingText: {
             Upgrading: 'Peningkatan sistem, sila tunggu...',
@@ -189,6 +193,7 @@ const message = {
             rePassword: 'Pengesahan kata laluan tidak sepadan dengan kata laluan.',
             requiredInput: 'Ruangan ini wajib diisi.',
             requiredSelect: 'Pilih satu item dalam senarai',
+            illegalChar: 'Suntikan aksara & ; $ \' ` ( ) " > < | tidak disokong buat masa ini',
             illegalInput: 'Ruangan ini tidak boleh mengandungi aksara tidak sah.',
             commonName:
                 'Ruangan ini mesti bermula dengan aksara bukan khas dan mesti terdiri daripada aksara rumi, Cina, nombor, ".", "-", dan "_" dengan panjang 1-128 aksara.',
@@ -227,9 +232,9 @@ const message = {
             paramComplexity:
                 'Ruangan ini tidak boleh bermula atau berakhir dengan aksara khas dan mesti terdiri daripada aksara rumi, nombor, "{0}" dengan panjang 6-128 aksara.',
             paramUrlAndPort: 'Ruangan ini mesti dalam format "http(s)://(nama domain/IP):(port)".',
-            nginxDoc: 'Ruangan ini mesti terdiri daripada aksara rumi, nombor, dan ".".',
+            nginxDoc: 'Ruangan ini mesti terdiri daripada aksara rumi, nombor, _, dan ".".',
             appName:
-                'Ruangan ini tidak boleh bermula atau berakhir dengan "-" dan "_" dan mesti terdiri daripada aksara rumi, nombor, "-", dan "_" dengan panjang 2-30 aksara.',
+                'Menyokong huruf kecil, nombor, -, dan _, panjang 2-30, dan tidak boleh bermula atau berakhir dengan - atau _',
             containerName:
                 'Menyokong huruf, nombor, -, _ dan .; tidak boleh bermula dengan -, _ atau .; panjang: 2-128 aksara.',
             mirror: 'Alamat pecutan cermin mesti bermula dengan http(s)://, menyokong huruf (huruf besar dan kecil), nombor, ., / dan -, serta tidak boleh mengandungi baris kosong.',
@@ -334,6 +339,7 @@ const message = {
         firewall: 'Firewall',
         ssl: 'Certificate | Certificates',
         database: 'Database | Databases',
+        ai_tools: 'AI',
         container: 'Container | Containers',
         cronjob: 'Cron Job | Cron Jobs',
         host: 'Host | Hosts',
@@ -430,6 +436,8 @@ const message = {
         permission: 'Kebenaran',
         permissionForIP: 'IP',
         permissionAll: 'Kesemuanya(%)',
+        localhostHelper:
+            'Mengkonfigurasi kebenaran pangkalan data sebagai "localhost" untuk penyebaran kontena akan menghalang akses luar ke kontena. Sila pilih dengan teliti!',
         databaseConnInfo: 'Maklumat sambungan',
         rootPassword: 'Kata laluan root',
         serviceName: 'Nama Perkhidmatan',
@@ -441,6 +449,7 @@ const message = {
         remoteConnHelper:
             'Sambungan jauh ke MySQL sebagai pengguna root mungkin mempunyai risiko keselamatan. Oleh itu, lakukan operasi ini dengan berhati-hati.',
         changePassword: 'Kata laluan',
+        changeConnHelper: 'Operasi ini akan mengubah pangkalan data semasa {0}. Adakah anda ingin meneruskan?',
         changePasswordHelper:
             'Pangkalan data telah dikaitkan dengan aplikasi. Menukar kata laluan akan menukar kata laluan pangkalan data aplikasi pada masa yang sama. Perubahan ini akan berkuat kuasa selepas aplikasi dimulakan semula.',
 
@@ -599,6 +608,57 @@ const message = {
         remoteConnHelper2:
             'Alamat sambungan ini boleh digunakan oleh aplikasi yang berjalan di luar kontena atau aplikasi luaran.',
         localIP: 'IP Tempatan',
+    },
+    ai_tools: {
+        model: {
+            model: 'Model',
+            create: 'Tambah Model',
+            create_helper: 'Tarik "{0}"',
+            ollama_doc: 'Anda boleh melawat laman web rasmi Ollama untuk mencari dan menemui lebih banyak model.',
+            container_conn_helper: 'Gunakan alamat ini untuk akses atau sambungan antara kontena',
+            ollama_sync:
+                'Sincronizando o modelo Ollama, encontrou que os seguintes modelos não existem, deseja excluí-los?',
+            from_remote: 'Este modelo não foi baixado via 1Panel, sem logs de pull relacionados.',
+            no_logs: 'Os logs de pull deste modelo foram excluídos e não podem ser visualizados.',
+        },
+        gpu: {
+            gpu: 'Monitor GPU',
+            base: 'Maklumat Asas',
+            gpuHelper: 'Perintah NVIDIA-SMI atau XPU-SMI tidak dikesan pada sistem semasa. Sila periksa dan cuba lagi!',
+            driverVersion: 'Versi Pemacu',
+            cudaVersion: 'Versi CUDA',
+            process: 'Maklumat Proses',
+            type: 'Jenis',
+            typeG: 'Grafik',
+            typeC: 'Pengiraan',
+            typeCG: 'Pengiraan + Grafik',
+            processName: 'Nama Proses',
+            processMemoryUsage: 'Penggunaan Memori',
+            temperatureHelper: 'Suhu GPU yang tinggi boleh menyebabkan pelambatan frekuensi GPU',
+            performanceStateHelper: 'Dari P0 (prestasi maksimum) hingga P12 (prestasi minimum)',
+            busID: 'ID Bas',
+            persistenceMode: 'Mod Ketekalan',
+            enabled: 'Diaktifkan',
+            disabled: 'Dilumpuhkan',
+            persistenceModeHelper:
+                'Mod ketekalan membolehkan respons tugas lebih cepat tetapi meningkatkan penggunaan kuasa sedia.',
+            displayActive: 'Kad Grafik Dimulakan',
+            displayActiveT: 'Ya',
+            displayActiveF: 'Tidak',
+            ecc: 'Teknologi Pemeriksaan dan Pembetulan Ralat',
+            computeMode: 'Mod Pengiraan',
+            default: 'Asal',
+            exclusiveProcess: 'Proses Eksklusif',
+            exclusiveThread: 'Thread Eksklusif',
+            prohibited: 'Dilarang',
+            defaultHelper: 'Asal: Proses boleh dilaksanakan secara serentak',
+            exclusiveProcessHelper:
+                'Proses Eksklusif: Hanya satu konteks CUDA boleh menggunakan GPU, tetapi boleh dikongsi oleh berbilang thread',
+            exclusiveThreadHelper: 'Thread Eksklusif: Hanya satu thread dalam konteks CUDA boleh menggunakan GPU',
+            prohibitedHelper: 'Dilarang: Proses tidak dibenarkan dilaksanakan serentak',
+            migModeHelper: 'Digunakan untuk membuat contoh MIG bagi pengasingan fizikal GPU pada tahap pengguna.',
+            migModeNA: 'Tidak Disokong',
+        },
     },
     container: {
         create: 'Cipta kontena',
@@ -967,6 +1027,7 @@ const message = {
         errHandle: 'Kegagalan pelaksanaan tugas cron',
         noRecord: 'Picu Tugas Cron, dan anda akan melihat rekod di sini.',
         cleanData: 'Bersihkan data',
+        cleanRemoteData: 'Padam data jarak jauh',
         cleanDataHelper: 'Padam fail sandaran yang dijana semasa tugas ini.',
         noLogs: 'Tiada keluaran tugas lagi...',
         errPath: 'Laluan sandaran [{0}] salah, tidak boleh dimuat turun!',
@@ -1196,6 +1257,7 @@ const message = {
         resource: 'Sumber',
         operate: 'Operasi',
         detail: {
+            ai: 'AI',
             groups: 'Kumpulan',
             hosts: 'Hos',
             apps: 'Aplikasi',
@@ -1340,6 +1402,11 @@ const message = {
         minimap: 'Peta mini kod',
         fileCanNotRead: 'Fail tidak dapat dibaca',
         panelInstallDir: 'Direktori pemasangan 1Panel tidak boleh dipadamkan',
+        existFileTitle: 'Amaran fail dengan nama yang sama',
+        existFileHelper: 'Fail yang dimuat naik mengandungi fail dengan nama yang sama. Adakah anda mahu menimpanya?',
+        existFileSize: 'Saiz fail (baru -> lama)',
+        existFileDirHelper: 'Fail/folder yang dipilih mempunyai nama yang sama. Sila berhati-hati!',
+        noSuchFile: 'Fail atau direktori tidak ditemui. Sila periksa dan cuba lagi.',
     },
     ssh: {
         setting: 'tetapan',
@@ -1446,8 +1513,8 @@ const message = {
         proxyDockerHelper:
             'Selaraskan konfigurasi pelayan proksi ke Docker, menyokong tarikan imej pelayan luar talian dan operasi lain',
         apiInterface: 'Aktifkan API',
-        apiInterfaceClose: 'Setelah ditutup, antara muka API tidak boleh diakses. Adakah anda mahu meneruskan?',
-        apiInterfaceHelper: 'Benarkan aplikasi pihak ketiga mengakses API.',
+        apiInterfaceClose: 'ntaramuka API tidak tersedia, fungsi aplikasi akan terhad. Adakah anda ingin meneruskan?',
+        apiInterfaceHelper: 'Menyokong akses antara muka API panel (fungsi ini perlu diaktifkan untuk aplikasi panel)',
         apiInterfaceAlert1:
             'Jangan aktifkan dalam persekitaran pengeluaran kerana ia mungkin meningkatkan risiko keselamatan pelayan.',
         apiInterfaceAlert2:
@@ -1469,8 +1536,8 @@ const message = {
         confDockerProxy: 'Konfigurasi proksi docker',
         restartNowHelper: 'Mengkonfigurasi proksi Docker memerlukan memulakan semula perkhidmatan Docker.',
         restartNow: 'Mulakan semula sekarang',
-        systemIPWarning: 'Alamat pelayan belum ditetapkan. Tetapkan di panel kawalan terlebih dahulu.',
-        systemIPWarning1: 'Alamat pelayan semasa ditetapkan kepada {0}, dan pengalihan cepat tidak mungkin!',
+        systemIPWarning: 'Alamat sistem belum ditetapkan. Tetapkannya dahulu di panel kawalan.',
+        systemIPWarning1: 'Alamat sistem semasa ditetapkan kepada {0}, dan pengalihan pantas tidak dapat dilakukan!',
         defaultNetwork: 'Kad rangkaian',
         syncTime: 'Waktu Pelayan',
         timeZone: 'Zon Waktu',
@@ -1737,6 +1804,9 @@ const message = {
         oss: 'Perisian Sumber Terbuka',
         pro: 'Pro',
         trial: 'Percubaan',
+        subscription: 'Langganan',
+        perpetual: 'Lesen Perpetual',
+        versionConstraint: '{0} Pembelian versi',
         office: 'Rasmi',
         trialInfo: 'Versi',
         authorizationId: 'ID Kebenaran Langganan',
@@ -1764,16 +1834,16 @@ const message = {
         levelUpPro: 'Tingkatkan ke Pro',
         licenseSync: 'Penyegerakan Lesen',
         knowMorePro: 'Ketahui Lebih Lanjut',
-        closeAlert: 'Halaman semasa boleh ditutup dalam tetapan panel',
+        closeAlert: 'Halaman semasa boleh disembunyikan dalam tetapan panel',
         introduce: 'Pengenalan Ciri',
         waf: 'Menaik taraf ke versi profesional boleh menyediakan ciri seperti peta pencegahan, log, rekod blok, sekatan lokasi geografi, peraturan tersuai, halaman pencegahan tersuai, dan sebagainya.',
         tamper: 'Menaik taraf ke versi profesional boleh melindungi laman web daripada pengubahsuaian atau manipulasi tanpa kebenaran.',
-        gpu: 'Menaik taraf ke versi profesional boleh membantu pengguna memantau parameter penting GPU secara visual seperti beban kerja, suhu, penggunaan memori secara masa nyata.',
         setting:
             'Menaik taraf ke versi profesional membolehkan penyesuaian logo panel, mesej selamat datang, dan maklumat lain.',
         monitor:
             'Tingkatkan ke versi profesional untuk melihat status masa nyata laman web, tren pelawat, sumber pelawat, log permintaan dan maklumat lain.',
         alert: 'Tingkatkan ke versi profesional untuk menerima maklumat amaran melalui SMS dan melihat log amaran, mengawal sepenuhnya pelbagai acara utama, dan memastikan operasi sistem bebas kerisauan.',
+        app: 'Tingkatkan ke versi profesional untuk menguruskan pelayan dan melihat ciri pemantauan melalui aplikasi mudah alih.',
     },
     clean: {
         scan: 'Mulakan imbasan',
@@ -1942,6 +2012,8 @@ const message = {
         diffHelper: 'Bahagian kiri ialah versi lama, kanan ialah versi baru.',
         pullImage: 'Tarik Imej',
         pullImageHelper: 'Laksanakan docker pull untuk menarik imej sebelum aplikasi dimulakan.',
+        gpuConfig: 'Pecutan GPU',
+        gpuConfigHelper: 'Sila pastikan bahawa pelayan telah dipasang pemacu NVIDIA dan NVIDIA Container Toolkit',
     },
     website: {
         website: 'Laman Web | Laman Web',
@@ -1966,7 +2038,7 @@ const message = {
         app: 'Aplikasi',
         appNew: 'Aplikasi Baru',
         appInstalled: 'Aplikasi yang Dipasang',
-        create: 'Cipta laman web',
+        create: 'Cipta',
         delete: 'Padam Laman Web',
         deleteApp: 'Padam Aplikasi',
         deleteBackup: 'Padam Sandaran',
@@ -2213,6 +2285,7 @@ const message = {
             'Apabila backend proksi terbalik adalah HTTPS, anda mungkin perlu menetapkan sumber SNI. Sila rujuk dokumentasi penyedia perkhidmatan CDN untuk butiran.',
         huaweicloud: 'Huawei Cloud',
         rainyun: 'Rain Yun',
+        westCN: 'West CN',
     },
     php: {
         short_open_tag: 'Sokongan tag pendek',
@@ -2548,10 +2621,44 @@ const message = {
         licenseHelper: 'Versi profesional menyokong amaran SMS',
         alertCountHelper: 'Kekerapan maksimum amaran harian',
     },
+    aitool: {
+        proxy: 'Peningkatan Proksi AI',
+        proxyHelper1: 'Ikatkan domain dan aktifkan HTTPS untuk meningkatkan keselamatan penghantaran',
+        proxyHelper2: 'Hadkan akses IP untuk mengelakkan pendedahan di internet awam',
+        proxyHelper3: 'Aktifkan penstriman',
+        proxyHelper4: 'Setelah selesai, anda boleh melihat dan mengurusnya dalam senarai laman web',
+        proxyHelper5:
+            'Selepas diaktifkan, anda boleh melumpuhkan akses luaran ke port dalam App Store - Dipasang - Ollama - Parameter untuk meningkatkan keselamatan.',
+        proxyHelper6: 'Untuk melumpuhkan konfigurasi proksi, anda boleh memadamnya dari senarai laman web.',
+        whiteListHelper: 'Hadkan akses kepada hanya IP dalam senarai putih',
+    },
+    mcp: {
+        server: 'Pelayan MCP',
+        create: 'Tambah Pelayan',
+        edit: 'Edit Pelayan',
+        commandHelper: 'Contoh: npx -y {0}',
+        baseUrl: 'Laluan Akses Luar',
+        baseUrlHelper: 'Contoh: http://192.168.1.2:8000',
+        ssePath: 'Laluan SSE',
+        ssePathHelper: 'Contoh: /sse, berhati-hati jangan bertindan dengan pelayan lain',
+        environment: 'Pemboleh Ubah Persekitaran',
+        envKey: 'Nama Pemboleh Ubah',
+        envValue: 'Nilai Pemboleh Ubah',
+        externalUrl: 'Alamat Sambungan Luar',
+        operatorHelper: 'Akan melakukan operasi {1} pada {0}, teruskan?',
+        domain: 'Alamat Akses Lalai',
+        domainHelper: 'Contoh: 192.168.1.1 atau example.com',
+        bindDomain: 'Sematkan Laman Web',
+        commandPlaceHolder: 'Kini hanya menyokong perintah pelancaran npx',
+        importMcpJson: 'Import Konfigurasi Pelayan MCP',
+        importMcpJsonError: 'Struktur mcpServers tidak betul',
+        bindDomainHelper:
+            'Setelah mengikat laman web, ia akan mengubah alamat akses semua Pelayan MCP yang dipasang dan menutup akses luaran ke pelabuhan',
+    },
 };
 
 export default {
-    ...fit2cloudEnLocale,
+    ...fit2cloudMsLocale,
     ...message,
-    ...xpackEnLocale,
+    ...xpackMsLocale,
 };

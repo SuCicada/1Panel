@@ -6,7 +6,7 @@
                     :model="form"
                     :label-position="mobile ? 'top' : 'left'"
                     label-width="auto"
-                    class="sm:w-full md:w-4/5 lg:w-3/5 2xl:w-1/2 max-w-max"
+                    class="sm:w-full md:w-4/5 lg:w-3/5 2xl:w-1/2 max-w-max ml-8"
                 >
                     <el-form-item :label="$t('setting.user')" prop="userName">
                         <el-input disabled v-model="form.userName">
@@ -337,6 +337,7 @@ const languageOptions = ref([
     ...(!globalStore.isIntl ? [{ value: 'en', label: 'English' }] : []),
     { value: 'ja', label: '日本語' },
     { value: 'pt-BR', label: 'Português (Brasil)' },
+    { value: 'ko', label: '한국어' },
     { value: 'ru', label: 'Русский' },
     { value: 'ms', label: 'Bahasa Melayu' },
 ]);

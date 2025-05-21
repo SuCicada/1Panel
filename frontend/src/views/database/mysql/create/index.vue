@@ -34,6 +34,7 @@
                                     <el-button @click="random">{{ $t('commons.button.random') }}</el-button>
                                 </template>
                             </el-input>
+                            <span class="input-help">{{ $t('commons.rule.illegalChar') }}</span>
                         </el-form-item>
 
                         <el-form-item :label="$t('database.permission')" prop="permission">
@@ -42,10 +43,13 @@
                                 <el-option
                                     v-if="form.from !== 'local'"
                                     value="localhost"
-                                    :label="$t('terminal.localhost')"
+                                    :label="$t('terminal.localhost') + '(localhost)'"
                                 />
                                 <el-option value="ip" :label="$t('database.permissionForIP')" />
                             </el-select>
+                            <span v-if="form.from !== 'local'" class="input-help">
+                                {{ $t('database.localhostHelper') }}
+                            </span>
                         </el-form-item>
                         <el-form-item v-if="form.permission === 'ip'" prop="permissionIPs">
                             <el-input clearable :rows="3" type="textarea" v-model="form.permissionIPs" />
@@ -85,7 +89,7 @@ import { ElForm } from 'element-plus';
 import { addMysqlDB } from '@/api/modules/database';
 import DrawerHeader from '@/components/drawer-header/index.vue';
 import { MsgSuccess } from '@/utils/message';
-import { checkIp, getRandomStr } from '@/utils/util';
+import { getRandomStr } from '@/utils/util';
 
 const loading = ref();
 const createVisible = ref(false);
@@ -104,19 +108,10 @@ const form = reactive({
 const rules = reactive({
     name: [Rules.requiredInput, Rules.dbName],
     username: [Rules.requiredInput, Rules.name],
-    password: [Rules.paramComplexity],
+    password: [Rules.requiredInput, Rules.noSpace, Rules.illegal],
     permission: [Rules.requiredSelect],
-    permissionIPs: [{ validator: checkIPs, trigger: 'blur', required: true }],
+    permissionIPs: [Rules.requiredInput, Rules.noSpace, Rules.illegal],
 });
-function checkIPs(rule: any, value: any, callback: any) {
-    let ips = form.permissionIPs.split(',');
-    for (const item of ips) {
-        if (checkIp(item)) {
-            return callback(new Error(i18n.global.t('commons.rule.ip')));
-        }
-    }
-    callback();
-}
 
 type FormInstance = InstanceType<typeof ElForm>;
 const formRef = ref<FormInstance>();

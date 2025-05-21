@@ -386,12 +386,12 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('file.mode')" prop="mode" max-width="50" min-width="110px">
+                    <el-table-column :label="$t('file.mode')" prop="mode" min-width="110">
                         <template #default="{ row }">
                             <el-link :underline="false" @click="openMode(row)">{{ row.mode }}</el-link>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('commons.table.user')" prop="user" show-overflow-tooltip>
+                    <el-table-column :label="$t('commons.table.user')" prop="user" show-overflow-tooltip min-width="90">
                         <template #default="{ row }">
                             <el-link :underline="false" @click="openChown(row)">
                                 {{ row.user ? row.user : '-' }} ({{ row.uid }})
@@ -405,7 +405,7 @@
                             </el-link>
                         </template>
                     </el-table-column>
-                    <el-table-column :label="$t('file.size')" prop="size" max-width="50" sortable>
+                    <el-table-column :label="$t('file.size')" prop="size" min-width="100" sortable>
                         <template #default="{ row, $index }">
                             <span v-if="row.isDir">
                                 <el-button
@@ -549,7 +549,7 @@ const codeReq = reactive({ path: '', expand: false, page: 1, pageSize: 100 });
 const fileUpload = reactive({ path: '' });
 const fileRename = reactive({ path: '', oldName: '' });
 const fileWget = reactive({ path: '' });
-const fileMove = reactive({ oldPaths: [''], type: '', path: '', name: '', count: 0 });
+const fileMove = reactive({ oldPaths: [''], allNames: [''], type: '', path: '', name: '', count: 0, isDir: false });
 const processPage = reactive({ open: false });
 
 const createRef = ref();
@@ -961,14 +961,23 @@ const openRename = (item: File.File) => {
 const openMove = (type: string) => {
     fileMove.type = type;
     fileMove.name = '';
-    const oldpaths = [];
+    fileMove.allNames = [];
+    fileMove.isDir = false;
+    const oldPaths = [];
     for (const s of selects.value) {
-        oldpaths.push(s['path']);
+        oldPaths.push(s['path']);
     }
     fileMove.count = selects.value.length;
-    fileMove.oldPaths = oldpaths;
+    fileMove.oldPaths = oldPaths;
     if (selects.value.length == 1) {
         fileMove.name = selects.value[0].name;
+        fileMove.isDir = selects.value[0].isDir;
+    } else {
+        const allNames = [];
+        for (const s of selects.value) {
+            allNames.push(s['name']);
+        }
+        fileMove.allNames = allNames;
     }
     moveOpen.value = true;
 };
@@ -979,6 +988,7 @@ const closeMove = () => {
     fileMove.oldPaths = [];
     fileMove.name = '';
     fileMove.count = 0;
+    fileMove.isDir = false;
     moveOpen.value = false;
 };
 

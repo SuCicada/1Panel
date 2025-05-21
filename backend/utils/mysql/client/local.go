@@ -188,18 +188,19 @@ func (r *Local) ChangeAccess(info AccessChangeInfo) error {
 		info.Name = "*"
 		info.Password = r.Password
 	}
-	if info.Permission != info.OldPermission {
-		if err := r.Delete(DeleteInfo{
-			Version:     info.Version,
-			Username:    info.Username,
-			Permission:  info.OldPermission,
-			ForceDelete: true,
-			Timeout:     300}); err != nil {
-			return err
-		}
-		if info.Username == "root" {
-			return nil
-		}
+	if info.Permission == info.OldPermission {
+		return nil
+	}
+	if err := r.Delete(DeleteInfo{
+		Version:     info.Version,
+		Username:    info.Username,
+		Permission:  info.OldPermission,
+		ForceDelete: true,
+		Timeout:     300}); err != nil {
+		return err
+	}
+	if info.Username == "root" {
+		return nil
 	}
 	if err := r.CreateUser(CreateInfo{
 		Name:       info.Name,
@@ -234,7 +235,7 @@ func (r *Local) Backup(info BackupInfo) error {
 		dumpCmd = "mariadb-dump"
 	}
 	global.LOG.Infof("start to %s | gzip > %s.gzip", dumpCmd, info.TargetDir+"/"+info.FileName)
-	cmd := exec.Command("docker", "exec", r.ContainerName, dumpCmd, "-uroot", "-p"+r.Password, "--default-character-set="+info.Format, info.Name)
+	cmd := exec.Command("docker", "exec", r.ContainerName, dumpCmd, "--routines", "-uroot", "-p"+r.Password, "--default-character-set="+info.Format, info.Name)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 

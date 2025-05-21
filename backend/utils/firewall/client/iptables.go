@@ -133,10 +133,10 @@ func (iptables *Iptables) NatAdd(protocol, srcPort, dest, destPort string, save 
 
 		// 非本机转发, 按公网流程走
 		if err := iptables.runf(NatTab, fmt.Sprintf(
-			"-A %s -p %s -d %s --dport %s -j MASQUERADE",
+			"-A %s -d %s -p %s --dport %s -j MASQUERADE",
 			PostRoutingChain,
-			protocol,
 			dest,
+			protocol,
 			destPort,
 		)); err != nil {
 			return err
@@ -192,8 +192,9 @@ func (iptables *Iptables) NatRemove(num string, protocol, srcPort, dest, destPor
 	// 删除公网转发规则
 	if dest != "" && dest != "127.0.0.1" && dest != "localhost" {
 		if err := iptables.runf(NatTab, fmt.Sprintf(
-			"-D %s -p %s --dport %s -j DNAT MASQUERADE",
+			"-D %s -d %s -p %s --dport %s -j MASQUERADE",
 			PostRoutingChain,
+			dest,
 			protocol,
 			destPort,
 		)); err != nil {

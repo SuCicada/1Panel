@@ -1,4 +1,4 @@
-<p align="center"><a href="https://1panel.hk"><img src="https://resource.1panel.hk/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
+<p align="center"><a href="https://1panel.pro"><img src="https://resource.1panel.pro/img/1panel-logo.png" alt="1Panel" width="300" /></a></p>
 <p align="center"><b>Alat Pengurusan Pelayan Linux Berasaskan Web Terbaik</b></p>
 <p align="center">
   <a href="https://trendshift.io/repositories/2462" target="_blank"><img src="https://trendshift.io/api/badge/repositories/2462" alt="1Panel-dev%2F1Panel | Trendshift" style="width: 180px; height: auto;" /></a>
@@ -45,14 +45,14 @@
 Jalankan skrip di bawah dan ikuti arahan untuk memasang 1Panel:
 
 ```bash
-curl -sSL https://resource.1panel.hk/quick_start.sh -o quick_start.sh && bash quick_start.sh
+curl -sSL https://resource.1panel.pro/quick_start.sh -o quick_start.sh && bash quick_start.sh
 ```
 
-Sila rujuk [dokumentasi](https://docs.1panel.hk/quick_start/) untuk maklumat lanjut.
+Sila rujuk [dokumentasi](https://docs.1panel.pro/quick_start/) untuk maklumat lanjut.
 
 ## Tangkap Layar
 
-![UI Display](https://resource.1panel.hk/img/1panel.png)
+![UI Display](https://resource.1panel.pro/img/1panel.png)
 
 ## Sejarah Bintang
 

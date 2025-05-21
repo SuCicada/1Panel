@@ -40,6 +40,7 @@ const GlobalStore = defineStore({
         isIntl: false,
         isTrial: false,
         productProExpires: 0,
+        licenseVerify: '',
 
         errStatus: '',
     }),
@@ -48,7 +49,7 @@ const GlobalStore = defineStore({
             state.themeConfig.theme === 'dark' ||
             (state.themeConfig.theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches),
         isDarkGoldTheme: (state) => state.themeConfig.primary === '#F0BE96' && state.isProductPro,
-        docsUrl: (state) => (state.isIntl ? 'https://docs.1panel.hk' : 'https://1panel.cn/docs'),
+        docsUrl: (state) => (state.isIntl ? 'https://docs.1panel.pro' : 'https://1panel.cn/docs'),
     },
     actions: {
         setOpenMenuTabs(openMenuTabs: boolean) {
@@ -70,6 +71,9 @@ const GlobalStore = defineStore({
             this.csrfToken = token;
         },
         updateLanguage(language: any) {
+            if (language === 'pt-BR') {
+                language = 'pt-br';
+            }
             this.language = language;
             localStorage.setItem('lang', language);
         },

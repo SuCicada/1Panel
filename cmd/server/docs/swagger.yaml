@@ -102,10 +102,14 @@ definitions:
         type: array
       crossVersionUpdate:
         type: boolean
+      description:
+        $ref: '#/definitions/dto.Locale'
       document:
         type: string
       github:
         type: string
+      gpuSupport:
+        type: boolean
       key:
         type: string
       limit:
@@ -144,6 +148,15 @@ definitions:
         type: string
       version:
         type: string
+    type: object
+  dto.BackupFile:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      size:
+        type: integer
     type: object
   dto.BackupInfo:
     properties:
@@ -1554,8 +1567,19 @@ definitions:
     - type
     - vars
     type: object
+  dto.ForceDelete:
+    properties:
+      forceDelete:
+        type: boolean
+      ids:
+        items:
+          type: integer
+        type: array
+    type: object
   dto.ForwardRuleOperate:
     properties:
+      forceDelete:
+        type: boolean
       rules:
         items:
           properties:
@@ -1974,6 +1998,25 @@ definitions:
     - id
     - type
     type: object
+  dto.Locale:
+    properties:
+      en:
+        type: string
+      ja:
+        type: string
+      ko:
+        type: string
+      ms:
+        type: string
+      pt-br:
+        type: string
+      ru:
+        type: string
+      zh:
+        type: string
+      zh-hant:
+        type: string
+    type: object
   dto.LogOption:
     properties:
       logMaxFile:
@@ -1999,7 +2042,11 @@ definitions:
         - zh
         - en
         - tw
+        - ja
+        - ko
         - ru
+        - ms
+        - pt-BR
         type: string
       name:
         type: string
@@ -2410,6 +2457,58 @@ definitions:
     - CACHE
     - HttpPer
     - ProxyCache
+  dto.OllamaBindDomain:
+    properties:
+      appInstallID:
+        type: integer
+      domain:
+        type: string
+      ipList:
+        type: string
+      sslID:
+        type: integer
+      websiteID:
+        type: integer
+    required:
+    - appInstallID
+    - domain
+    type: object
+  dto.OllamaBindDomainReq:
+    properties:
+      appInstallID:
+        type: integer
+    required:
+    - appInstallID
+    type: object
+  dto.OllamaBindDomainRes:
+    properties:
+      acmeAccountID:
+        type: integer
+      allowIPs:
+        items:
+          type: string
+        type: array
+      connUrl:
+        type: string
+      domain:
+        type: string
+      sslID:
+        type: integer
+      websiteID:
+        type: integer
+    type: object
+  dto.OllamaModelDropList:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.OllamaModelName:
+    properties:
+      name:
+        type: string
+    type: object
   dto.OneDriveInfo:
     properties:
       client_id:
@@ -3243,6 +3342,8 @@ definitions:
         type: string
       lastCleanTime:
         type: string
+      licenseVerify:
+        type: string
       localTime:
         type: string
       menuTabs:
@@ -3417,6 +3518,8 @@ definitions:
     properties:
       key:
         type: string
+      locales:
+        $ref: '#/definitions/dto.Locale'
       name:
         type: string
       sort:
@@ -3606,10 +3709,14 @@ definitions:
         type: string
       crossVersionUpdate:
         type: boolean
+      description:
+        type: string
       document:
         type: string
       github:
         type: string
+      gpuSupport:
+        type: boolean
       icon:
         type: string
       id:
@@ -3740,21 +3847,6 @@ definitions:
       version:
         type: string
       workDir:
-        type: string
-    type: object
-  model.Tag:
-    properties:
-      createdAt:
-        type: string
-      id:
-        type: integer
-      key:
-        type: string
-      name:
-        type: string
-      sort:
-        type: integer
-      updatedAt:
         type: string
     type: object
   model.Website:
@@ -3952,6 +4044,8 @@ definitions:
         type: string
       editCompose:
         type: boolean
+      gpuConfig:
+        type: boolean
       hostMode:
         type: boolean
       memoryLimit:
@@ -4060,6 +4154,8 @@ definitions:
       dockerCompose:
         type: string
       editCompose:
+        type: boolean
+      gpuConfig:
         type: boolean
       hostMode:
         type: boolean
@@ -4294,6 +4390,15 @@ definitions:
     required:
     - path
     type: object
+  request.FilePathsCheck:
+    properties:
+      paths:
+        items:
+          type: string
+        type: array
+    required:
+    - paths
+    type: object
   request.FileReadByLineReq:
     properties:
       ID:
@@ -4440,6 +4545,8 @@ definitions:
       dockerCompose:
         type: string
       editCompose:
+        type: boolean
+      gpuConfig:
         type: boolean
       hostMode:
         type: boolean
@@ -5291,6 +5398,16 @@ definitions:
     - proxyHost
     - proxyPass
     type: object
+  request.WebsiteProxyDel:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
   request.WebsiteProxyReq:
     properties:
       id:
@@ -5525,6 +5642,8 @@ definitions:
         type: string
       editCompose:
         type: boolean
+      gpuConfig:
+        type: boolean
       hostMode:
         type: boolean
       memoryLimit:
@@ -5544,10 +5663,14 @@ definitions:
         type: string
       crossVersionUpdate:
         type: boolean
+      description:
+        type: string
       document:
         type: string
       github:
         type: string
+      gpuSupport:
+        type: boolean
       icon:
         type: string
       id:
@@ -5578,7 +5701,7 @@ definitions:
         type: string
       tags:
         items:
-          $ref: '#/definitions/model.Tag'
+          $ref: '#/definitions/response.TagDTO'
         type: array
       type:
         type: string
@@ -5605,6 +5728,8 @@ definitions:
         type: string
       enable:
         type: boolean
+      gpuSupport:
+        type: boolean
       hostMode:
         type: boolean
       id:
@@ -5626,39 +5751,6 @@ definitions:
         type: string
       version:
         type: string
-    type: object
-  response.AppDto:
-    properties:
-      icon:
-        type: string
-      id:
-        type: integer
-      installed:
-        type: boolean
-      key:
-        type: string
-      limit:
-        type: integer
-      name:
-        type: string
-      resource:
-        type: string
-      shortDescEn:
-        type: string
-      shortDescZh:
-        type: string
-      status:
-        type: string
-      tags:
-        items:
-          $ref: '#/definitions/model.Tag'
-        type: array
-      type:
-        type: string
-      versions:
-        items:
-          type: string
-        type: array
     type: object
   response.AppInstalledCheck:
     properties:
@@ -5687,6 +5779,39 @@ definitions:
       version:
         type: string
     type: object
+  response.AppItem:
+    properties:
+      description:
+        type: string
+      gpuSupport:
+        type: boolean
+      icon:
+        type: string
+      id:
+        type: integer
+      installed:
+        type: boolean
+      key:
+        type: string
+      limit:
+        type: integer
+      name:
+        type: string
+      resource:
+        type: string
+      status:
+        type: string
+      tags:
+        items:
+          $ref: '#/definitions/response.TagDTO'
+        type: array
+      type:
+        type: string
+      versions:
+        items:
+          type: string
+        type: array
+    type: object
   response.AppParam:
     properties:
       edit:
@@ -5714,7 +5839,7 @@ definitions:
     properties:
       items:
         items:
-          $ref: '#/definitions/response.AppDto'
+          $ref: '#/definitions/response.AppItem'
         type: array
       total:
         type: integer
@@ -5761,6 +5886,17 @@ definitions:
         type: number
     required:
     - size
+    type: object
+  response.ExistFileInfo:
+    properties:
+      modTime:
+        type: string
+      name:
+        type: string
+      path:
+        type: string
+      size:
+        type: number
     type: object
   response.FileInfo:
     properties:
@@ -5993,19 +6129,6 @@ definitions:
       uploadMaxSize:
         type: string
     type: object
-  response.PHPExtensionsDTO:
-    properties:
-      createdAt:
-        type: string
-      extensions:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updatedAt:
-        type: string
-    type: object
   response.PackageScripts:
     properties:
       name:
@@ -6087,6 +6210,15 @@ definitions:
           $ref: '#/definitions/response.ProcessStatus'
         type: array
       user:
+        type: string
+    type: object
+  response.TagDTO:
+    properties:
+      id:
+        type: integer
+      key:
+        type: string
+      name:
         type: string
     type: object
   response.WebsiteAcmeAccountDTO:
@@ -6377,6 +6509,240 @@ info:
   title: 1Panel
   version: "1.0"
 paths:
+  /ai/domain/bind:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OllamaBindDomain'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Bind domain
+      tags:
+      - AI
+  /ai/domain/get:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OllamaBindDomainReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OllamaBindDomainRes'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Get bind domain
+      tags:
+      - AI
+  /ai/gpu/load:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load gpu / xpu info
+      tags:
+      - AI
+  /ai/ollama/model:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OllamaModelName'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Create Ollama model
+      tags:
+      - AI
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - name
+        formatEN: add Ollama model [name]
+        formatZH: 添加 Ollama 模型 [name]
+        paramKeys: []
+  /ai/ollama/model/close:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OllamaModelName'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Close Ollama model conn
+      tags:
+      - AI
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - name
+        formatEN: close conn for Ollama model [name]
+        formatZH: 关闭 Ollama 模型连接 [name]
+        paramKeys: []
+  /ai/ollama/model/del:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ForceDelete'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Delete Ollama model
+      tags:
+      - AI
+      x-panel-log:
+        BeforeFunctions:
+        - db: ollama_models
+          input_column: id
+          input_value: ids
+          isList: true
+          output_column: name
+          output_value: names
+        bodyKeys:
+        - ids
+        formatEN: remove Ollama model [names]
+        formatZH: 删除 Ollama 模型 [names]
+        paramKeys: []
+  /ai/ollama/model/load:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OllamaModelName'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Page Ollama models
+      tags:
+      - AI
+  /ai/ollama/model/recreate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OllamaModelName'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Rereate Ollama model
+      tags:
+      - AI
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - name
+        formatEN: re-add Ollama model [name]
+        formatZH: 添加 Ollama 模型重试 [name]
+        paramKeys: []
+  /ai/ollama/model/search:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SearchWithPage'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PageResult'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Page Ollama models
+      tags:
+      - AI
+  /ai/ollama/model/sync:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.OllamaModelDropList'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Sync Ollama model list
+      tags:
+      - AI
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys: []
+        formatEN: sync Ollama model list
+        formatZH: 同步 Ollama 模型列表
+        paramKeys: []
   /apps/{key}:
     get:
       consumes:
@@ -8225,7 +8591,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       responses:
         "200":
           description: OK
@@ -10001,6 +10367,30 @@ paths:
         formatEN: Create dir or file [path]
         formatZH: 创建文件/文件夹 [path]
         paramKeys: []
+  /files/batch/check:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.FilePathsCheck'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.ExistFileInfo'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Batch check file exist
+      tags:
+      - File
   /files/batch/del:
     post:
       consumes:
@@ -10849,381 +11239,6 @@ paths:
         formatEN: update group [name][type]
         formatZH: 更新组 [name][type]
         paramKeys: []
-  /host/conffile/update:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.SSHConf'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Update host SSH setting by file
-      tags:
-      - SSH
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys: []
-        formatEN: update SSH conf
-        formatZH: 修改 SSH 配置文件
-        paramKeys: []
-  /host/ssh/conf:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Load host SSH conf
-      tags:
-      - SSH
-  /host/ssh/generate:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.GenerateSSH'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Generate host SSH secret
-      tags:
-      - SSH
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys: []
-        formatEN: generate SSH secret
-        formatZH: '生成 SSH 密钥 '
-        paramKeys: []
-  /host/ssh/log:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.SearchSSHLog'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.SSHLog'
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Load host SSH logs
-      tags:
-      - SSH
-  /host/ssh/operate:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.Operate'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Operate SSH
-      tags:
-      - SSH
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - operation
-        formatEN: '[operation] SSH'
-        formatZH: '[operation] SSH '
-        paramKeys: []
-  /host/ssh/search:
-    post:
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.SSHInfo'
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Load host SSH setting info
-      tags:
-      - SSH
-  /host/ssh/secret:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.GenerateLoad'
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Load host SSH secret
-      tags:
-      - SSH
-  /host/ssh/update:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/dto.SSHUpdate'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Update host SSH setting
-      tags:
-      - SSH
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - key
-        - value
-        formatEN: update SSH setting [key] => [value]
-        formatZH: 修改 SSH 配置 [key] => [value]
-        paramKeys: []
-  /host/tool:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.HostToolReq'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.HostToolRes'
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Get tool status
-      tags:
-      - Host tool
-  /host/tool/config:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.HostToolConfig'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.HostToolConfig'
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Get tool config
-      tags:
-      - Host tool
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - operate
-        formatEN: '[operate] tool config'
-        formatZH: '[operate] 主机工具配置文件 '
-        paramKeys: []
-  /host/tool/create:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.HostToolCreate'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Create Host tool Config
-      tags:
-      - Host tool
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - type
-        formatEN: create [type] config
-        formatZH: 创建 [type] 配置
-        paramKeys: []
-  /host/tool/log:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.HostToolLogReq'
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Get tool logs
-      tags:
-      - Host tool
-  /host/tool/operate:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.HostToolReq'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Operate tool
-      tags:
-      - Host tool
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - operate
-        - type
-        formatEN: '[operate] [type]'
-        formatZH: '[operate] [type] '
-        paramKeys: []
-  /host/tool/supervisor/process:
-    get:
-      consumes:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.SupervisorProcessConfig'
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Get Supervisor process config
-      tags:
-      - Host tool
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.SupervisorProcessConfig'
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Create Supervisor process
-      tags:
-      - Host tool
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - operate
-        formatEN: '[operate] process'
-        formatZH: '[operate] 守护进程 '
-        paramKeys: []
-  /host/tool/supervisor/process/file:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/request.SupervisorProcessFileReq'
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      - Timestamp: []
-      summary: Get Supervisor process config
-      tags:
-      - Host tool
-      x-panel-log:
-        BeforeFunctions: []
-        bodyKeys:
-        - operate
-        formatEN: '[operate] Supervisor Process Config file'
-        formatZH: '[operate] Supervisor 进程文件 '
-        paramKeys: []
   /hosts:
     post:
       consumes:
@@ -11489,6 +11504,32 @@ paths:
         - name
         formatEN: update quick command [name]
         formatZH: 更新快捷命令 [name]
+        paramKeys: []
+  /hosts/conffile/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SSHConf'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Update host SSH setting by file
+      tags:
+      - SSH
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys: []
+        formatEN: update SSH conf
+        formatZH: 修改 SSH 配置文件
         paramKeys: []
   /hosts/del:
     post:
@@ -11809,6 +11850,157 @@ paths:
       summary: Page host
       tags:
       - Host
+  /hosts/ssh/conf:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load host SSH conf
+      tags:
+      - SSH
+  /hosts/ssh/generate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GenerateSSH'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Generate host SSH secret
+      tags:
+      - SSH
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys: []
+        formatEN: generate SSH secret
+        formatZH: '生成 SSH 密钥 '
+        paramKeys: []
+  /hosts/ssh/log:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SearchSSHLog'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SSHLog'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load host SSH logs
+      tags:
+      - SSH
+  /hosts/ssh/operate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Operate'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Operate SSH
+      tags:
+      - SSH
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - operation
+        formatEN: '[operation] SSH'
+        formatZH: '[operation] SSH '
+        paramKeys: []
+  /hosts/ssh/search:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SSHInfo'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load host SSH setting info
+      tags:
+      - SSH
+  /hosts/ssh/secret:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GenerateLoad'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load host SSH secret
+      tags:
+      - SSH
+  /hosts/ssh/update:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SSHUpdate'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Update host SSH setting
+      tags:
+      - SSH
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - key
+        - value
+        formatEN: update SSH setting [key] => [value]
+        formatZH: 修改 SSH 配置 [key] => [value]
+        paramKeys: []
   /hosts/test/byid/{id}:
     post:
       consumes:
@@ -11852,6 +12044,204 @@ paths:
       summary: Test host conn by info
       tags:
       - Host
+  /hosts/tool:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.HostToolReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.HostToolRes'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Get tool status
+      tags:
+      - Host tool
+  /hosts/tool/config:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.HostToolConfig'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.HostToolConfig'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Get tool config
+      tags:
+      - Host tool
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - operate
+        formatEN: '[operate] tool config'
+        formatZH: '[operate] 主机工具配置文件 '
+        paramKeys: []
+  /hosts/tool/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.HostToolCreate'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Create Host tool Config
+      tags:
+      - Host tool
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - type
+        formatEN: create [type] config
+        formatZH: 创建 [type] 配置
+        paramKeys: []
+  /hosts/tool/log:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.HostToolLogReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Get tool logs
+      tags:
+      - Host tool
+  /hosts/tool/operate:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.HostToolReq'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Operate tool
+      tags:
+      - Host tool
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - operate
+        - type
+        formatEN: '[operate] [type]'
+        formatZH: '[operate] [type] '
+        paramKeys: []
+  /hosts/tool/supervisor/process:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SupervisorProcessConfig'
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Get Supervisor process config
+      tags:
+      - Host tool
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.SupervisorProcessConfig'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Create Supervisor process
+      tags:
+      - Host tool
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - operate
+        formatEN: '[operate] process'
+        formatZH: '[operate] 守护进程 '
+        paramKeys: []
+  /hosts/tool/supervisor/process/file:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.SupervisorProcessFileReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Get Supervisor process config
+      tags:
+      - Host tool
+      x-panel-log:
+        BeforeFunctions: []
+        bodyKeys:
+        - operate
+        formatEN: '[operate] Supervisor Process Config file'
+        formatZH: '[operate] Supervisor 进程文件 '
+        paramKeys: []
   /hosts/tree:
     post:
       consumes:
@@ -12415,9 +12805,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/response.PHPExtensionsDTO'
-            type: array
+            $ref: '#/definitions/dto.PageResult'
       security:
       - ApiKeyAuth: []
       - Timestamp: []
@@ -12763,6 +13151,54 @@ paths:
       - ApiKeyAuth: []
       - Timestamp: []
       summary: Page backup records by cronjob
+      tags:
+      - Backup Account
+  /settings/backup/record/size:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RecordSearch'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BackupFile'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load backup records size
+      tags:
+      - Backup Account
+  /settings/backup/record/size/bycronjob:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RecordSearchByCronjob'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BackupFile'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Load backup records size for cronjob
       tags:
       - Backup Account
   /settings/backup/recover:
@@ -15756,6 +16192,39 @@ paths:
       summary: Get proxy conf
       tags:
       - Website
+  /websites/proxies/del:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.WebsiteProxyDel'
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      - Timestamp: []
+      summary: Delete proxy conf
+      tags:
+      - Website
+      x-panel-log:
+        BeforeFunctions:
+        - db: websites
+          input_column: id
+          input_value: id
+          isList: false
+          output_column: primary_domain
+          output_value: domain
+        bodyKeys:
+        - id
+        formatEN: Delete domain [domain] proxy config
+        formatZH: 删除网站 [domain] 反向代理配置
+        paramKeys: []
   /websites/proxies/update:
     post:
       consumes:
@@ -16299,15 +16768,7 @@ schemes:
 - https
 securityDefinitions:
   ApiKeyAuth:
-    description: |-
-      Custom Token Format, Format: md5('1panel' + API-Key + UnixTimestamp).
-      ```
-      eg:
-      curl -X GET "http://localhost:4004/api/v1/resource" \
-      -H "1Panel-Token: <1panel_token>" \
-      -H "1Panel-Timestamp: <current_unix_timestamp>"
-      ```
-      - `1Panel-Token` is the key for the panel API Key.
+    description: '- `1Panel-Token` is the key for the panel API Key.'
     in: header
     name: 1Panel-Token
     type: apiKey
