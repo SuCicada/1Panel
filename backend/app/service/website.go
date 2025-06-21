@@ -427,7 +427,9 @@ func (w WebsiteService) UpdateWebsite(req request.WebsiteUpdate) error {
 		}
 	}
 	website.PrimaryDomain = req.PrimaryDomain
-	website.WebsiteGroupID = req.WebsiteGroupID
+	if req.WebsiteGroupID > 0 {
+		website.WebsiteGroupID = req.WebsiteGroupID
+	}
 	website.Remark = req.Remark
 	website.IPV6 = req.IPV6
 
@@ -1768,11 +1770,22 @@ func (w WebsiteService) GetProxies(id uint) (res []request.WebsiteProxyConfig, e
 		}
 		directives := config.GetDirectives()
 
-		location, ok := directives[0].(*components.Location)
-		if !ok {
-			err = errors.New("error")
-			return
+		var (
+			location *components.Location
+			ok       bool
+		)
+		for _, directive := range directives {
+			if directive.GetName() == "location" {
+				location, ok = directive.(*components.Location)
+				if ok {
+					break
+				}
+			}
 		}
+		if location == nil {
+			return nil, buserr.New("ErrConfigParse")
+		}
+
 		proxyConfig.ProxyPass = location.ProxyPass
 		proxyConfig.Cache = location.Cache
 		if location.CacheTime > 0 {
